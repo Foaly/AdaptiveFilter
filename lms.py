@@ -31,6 +31,42 @@ def lms(x, d, M, μ):
     return w, e, y
 
 
+# x   = Eingangsvektor
+# d   = Rauschen + Ausgangssignal vom unbekanten system
+# M   = Anzahl der Filterkoeffizienten
+# rho = Vergessensfaktor
+
+# w = Filterkoeffizienten
+# e = Fehlersignal
+# y = gefilteres Signal
+
+def rls(x, d, M, rho):
+    p0 = 1000000
+    inv_R = p0 * np.identity(M)
+
+    N = x.size
+    w = np.zeros(M)
+    e = np.zeros(N)
+    y = np.zeros(N)
+
+    for n in range(M-1, N):
+        x_n = np.array([ x[n], x[n-1], x[n-2], x[n-3], x[n-4] ])
+
+        a = np.dot(w, x_n)
+        y[n] = a
+        e[n] = d[n] - y[n]
+
+        # c = 1 / (rho + x_n.transpose() * inv_R * x_n)
+        # inv_R = 1 / rho * (inv_R - c * inv_R * x_n * x_n.transpose() * inv_R)
+
+        R1 = np.dot(np.dot(np.dot(inv_R, x_n), x_n.transpose()), inv_R)
+        R2 = rho + np.dot(np.dot(x_n, inv_R), x_n.transpose())
+        inv_R = 1 / rho * (inv_R - R1 / R2)
+
+        w += np.dot(inv_R, x_n) * e[n]
+
+    return w, e, y
+
 
 
 μ = 0.2
