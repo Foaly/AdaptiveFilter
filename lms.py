@@ -14,16 +14,14 @@ import matplotlib.pyplot as plt
 # y = gefilteres Signal
 
 def lms(x, d, M, μ):
-    #x = np.insert(x, 0, np.zeros(M - 1, x.dtype))  # insert leading zeros
 
-    N = x.size - M
+    N = x.size
     w = np.zeros(M)
     e = np.zeros(N)
     y = np.zeros(N)
 
-    for n in range(M-1, N):
-        x_n = [ x[n], x[n-1], x[n-2], x[n-3], x[n-4] ]
-        x_n = np.array(x_n)
+    for n in range(M, N):
+        x_n = x[n:n-M:-1] # Works but the first element still gets ignored (due to exclusive end index)
         y[n] = np.dot(w, x_n)
         e[n] = d[n] - y[n]
         w += μ * e[n] * x_n
@@ -72,7 +70,7 @@ def rls(x, d, M, rho):
 μ = 0.2
 M = 5
 
-mat_FIR = scipy.io.loadmat('System_FIR25')
+mat_FIR = scipy.io.loadmat('System_FIR22')
 
 x = mat_FIR["X"][0]
 
@@ -83,6 +81,6 @@ d = d_ + noise
 
 out, e, y = lms(x, d_, M, μ)
 out = np.around(out, 3)
-plt.plot(np.abs(e[0:200]))
-plt.show()
+#plt.plot(np.abs(e[0:200]))
+#plt.show()
 print(out)
