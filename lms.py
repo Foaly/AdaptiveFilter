@@ -1,22 +1,36 @@
 import numpy as np
 import scipy.io
 import scipy.signal
+import matplotlib.pyplot as plt
 
+
+# x = Eingangsvektor
+# d = Rauschen + Ausgangssignal vom unbekanten system
+# M = Anzahl der Filterkoeffizienten
+# μ = Schrittweite
+
+# w = Filterkoeffizienten
+# e = Fehlersignal
+# y = gefilteres Signal
 
 def lms(x, d, M, μ):
     #x = np.insert(x, 0, np.zeros(M - 1, x.dtype))  # insert leading zeros
 
     N = x.size - M
     w = np.zeros(M)
-    #μ_max = 2 / N * np.abs(np.average(x))
+    e = np.zeros(N)
+    y = np.zeros(N)
 
-    for n in range(N):
-        x_n = x[n:n + M]
-        y = np.dot(w, x_n)
-        e = d[n] - y
-        w += μ * e * x_n
+    for n in range(M-1, N):
+        x_n = [ x[n], x[n-1], x[n-2], x[n-3], x[n-4] ]
+        x_n = np.array(x_n)
+        y[n] = np.dot(w, x_n)
+        e[n] = d[n] - y[n]
+        w += μ * e[n] * x_n
 
-    return w
+    return w, e, y
+
+
 
 
 μ = 0.2
@@ -31,6 +45,8 @@ d_ = mat_FIR["D_"][0]
 noise = np.random.normal(0.0, 1.0, d_.size)
 d = d_ + noise
 
-out = lms(x, d_, M, μ)
+out, e, y = lms(x, d_, M, μ)
 out = np.around(out, 3)
+plt.plot(np.abs(e[0:200]))
+plt.show()
 print(out)
