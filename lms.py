@@ -65,21 +65,35 @@ def rls(x, d, M, rho):
     return w, e, y
 
 
-
 μ = 0.2
-M = 5
+rho = 0.5
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
 
 x = mat_FIR["X"][0]
 
-#d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
+# d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
 d_ = mat_FIR["D_"][0]
-noise = np.random.normal(0.0, 1.0, d_.size)
-d = d_ + noise
 
-out, e, y = rls(x, d_, M, μ)
-out = np.around(out, 3)
-plt.plot(np.abs(e[0:200]))
-plt.show()
-print(out)
+for sigma in [0.001, 0.1, 1.0, 10.0]:
+    for N in [5]:
+        noise = np.random.normal(0.0, sigma, d_.size)
+        d = d_ + noise
+
+        w1, e1, y1 = lms(x, d, N, μ)
+        w2, e2, y2 = rls(x, d, N, rho)
+
+        f, axarr = plt.subplots(2)
+        plt.subplots_adjust(hspace=0.5)
+        axarr[0].plot(np.abs(e1))
+        axarr[0].set_title('LMS')
+        axarr[0].set_xlabel("Samples")
+        axarr[0].set_ylabel("Error")
+
+        axarr[1].plot(np.abs(e2))
+        axarr[1].set_title('RLS')
+        axarr[1].set_xlabel("Samples")
+        axarr[1].set_ylabel("Error")
+
+        plt.savefig("N_" + str(N) + "_sig_" + str(sigma) + ".pdf", bbox_inches='tight')
+        plt.show()
