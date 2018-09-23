@@ -1,0 +1,58 @@
+% Nehme andere Verzeichnise ins Inhaltsverzeichnis auf
+\documentclass[listof=totoc,bibliography=totoc]{article}
+% scrreprt
+
+% zeige Header & Footer auch auf Kapitelseiten
+%\renewcommand*\chapterpagestyle{scrheadings}
+
+\usepackage{geometry}
+    \geometry{
+    a4paper,
+    total={170mm,257mm},
+    left=20mm,
+    top=20mm,
+}
+
+% character encoding
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%\usepackage{fontspec}
+
+% puts the images where they belong
+\usepackage{float}
+
+% makes refs clickable
+\usepackage{hyperref}
+\usepackage{caption} % show the images when clicked on a ref
+\usepackage{amssymb}
+
+% unsauber (wegen hässlicher typo von scrrept)
+\renewcommand*\rmdefault{ppl}
+\renewcommand*\sfdefault{ppl}
+\renewcommand*\ttdefault{cmss}
+
+\usepackage[onehalfspacing]{setspace}
+
+\usepackage[automark, headsepline]{scrlayer-scrpage}
+% footsepline
+\clearpairofpagestyles
+\pagestyle{scrheadings}
+
+\automark{section}
+\ohead{\parbox[b]{0.49\textwidth}{\raggedleft\headmark}\vspace*{0.01mm}}
+\ofoot*{\pagemark}
+
+\usepackage{enumerate}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{url}
+%\usepackage{siunitx}
+%\sisetup{
+%  locale = DE ,
+%  per-mode = symbol
+%}
+
+\usepackage{listings}

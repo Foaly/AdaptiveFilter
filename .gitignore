@@ -6,3 +6,27 @@ venv
 
 # Raw files
 System*.mat
+
+# Latex
+*.aux
+*.bbl
+*.blg
+*.bcf
+*.dvi
+*.log
+*.toc
+*.tps
+*.run.xml
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.asc
+*.synctex.gz
+
+*.bib.bak
+*.bib.sav
+
+*-eps-converted-to.pdf
+text/main.pdf
+*.out
