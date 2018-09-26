@@ -23,10 +23,15 @@ def lms(x, d, M, μ):
 
     for n in range(M, N):
         x_n = x[n:n-M:-1]  # Works but the first element still gets ignored (due to exclusive end index)
+        # Filterausgang
         y[n] = np.dot(w, x_n)
+        # Fehlerwert
         e[n] = d[n] - y[n]
+        # Aufdatierung des Koeffizientenvektors
         w += μ * e[n] * x_n
 
+    # Quadratischer Fehler
+    e = np.square(e)
     return w, e, y
 
 
@@ -52,16 +57,24 @@ def rls(x, d, M, rho):
     for n in range(M, N):
         x_n = x[n:n-M:-1]  # Works but the first element still gets ignored (due to exclusive end index)
 
-        a = np.dot(w, x_n)
-        y[n] = a
+        # A priori Ausgangswert
+        y[n] = np.dot(w, x_n)
+
+        # A priori Fehler
         e[n] = d[n] - y[n]
 
+        # Gefilterter normierter Datenvektor
         z_denom = rho + np.dot(np.dot(x_n, inv_R), x_n.transpose())
         z = np.dot(inv_R, x_n) / z_denom
+
+        # Aufdatierung des optimalen Gewichtsvektors
+        w += e[n] * z
+
+        # Aufdatieren der Inversen der deterministischen Autokorrelationsmatrix
         inv_R = 1 / rho * (inv_R - np.dot(np.dot(z, x_n.transpose()), inv_R))
 
-        w += np.dot(inv_R, x_n) * e[n]
-
+    # Quadratischer Fehler
+    e = np.square(e)
     return w, e, y
 
 
@@ -97,3 +110,4 @@ for sigma in [0.001, 0.1, 1.0, 10.0]:
 
         plt.savefig("N_" + str(N) + "_sig_" + str(sigma) + ".pdf", bbox_inches='tight')
         plt.show()
+
