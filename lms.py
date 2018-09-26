@@ -77,6 +77,9 @@ def rls(x, d, M, rho):
     e = np.square(e)
     return w, e, y
 
+def addNoise(x, variance):
+    sigma = np.sqrt(variance)
+    return x + np.random.normal(0.0, sigma, x.size)
 
 μ = 0.2
 rho = 0.5
@@ -88,10 +91,9 @@ x = mat_FIR["X"][0]
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
 d_ = mat_FIR["D_"][0]
 
-for sigma in [0.001, 0.1, 1.0, 10.0]:
+for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
     for N in [5]:
-        noise = np.random.normal(0.0, sigma, d_.size)
-        d = d_ + noise
+        d = addNoise(d_, variance)
 
         w1, e1, y1 = lms(x, d, N, μ)
         w2, e2, y2 = rls(x, d, N, rho)
