@@ -28,5 +28,5 @@ System*.mat
 *.bib.sav
 
 *-eps-converted-to.pdf
-text/main.pdf
+tex/main.pdf
 *.out
