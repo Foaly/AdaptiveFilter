@@ -4,6 +4,10 @@ import scipy.signal
 import matplotlib.pyplot as plt
 
 
+def smoother(x, N):
+    csum = np.cumsum(np.insert(x, 0, 0))
+    return (csum[N:] - csum[:-N]) / float(N)
+
 # x = Eingangsvektor
 # d = Rauschen + Ausgangssignal vom unbekanten system
 # M = Anzahl der Filterkoeffizienten
@@ -81,15 +85,20 @@ def addNoise(x, variance):
     sigma = np.sqrt(variance)
     return x + np.random.normal(0.0, sigma, x.size)
 
-μ = 0.2
-rho = 0.5
+
+μ = 0.01
+rho = 0.7
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
+mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
 
-x = mat_FIR["X"][0]
+# x = mat_FIR["X"][0]
+x = mat_FIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
-d_ = mat_FIR["D_"][0]
+# d_ = mat_FIR["D_"][0]
+d_ = mat_FIR_Systemwechsel["D_"][0]
+
 
 for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
     for N in [5]:
@@ -100,16 +109,23 @@ for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
 
         f, axarr = plt.subplots(2)
         plt.subplots_adjust(hspace=0.5)
-        axarr[0].plot(np.abs(e1))
+        #f.tight_layout()
+        e1 = smoother(e1, 30)
+        axarr[0].plot(e1, linewidth=1.2)
         axarr[0].set_title('LMS')
         axarr[0].set_xlabel("Samples")
         axarr[0].set_ylabel("Error")
+        axarr[0].grid(True)
+        axarr[0].set_xlim(-1)
 
-        axarr[1].plot(np.abs(e2))
+        e2 = smoother(e2, 30)
+        axarr[1].plot(e2, linewidth=1.2)
         axarr[1].set_title('RLS')
         axarr[1].set_xlabel("Samples")
         axarr[1].set_ylabel("Error")
+        axarr[1].grid(True)
+        axarr[1].set_xlim(-1)
 
-        plt.savefig("N_" + str(N) + "_sig_" + str(sigma) + ".pdf", bbox_inches='tight')
+        # plt.savefig("N_" + str(N) + "_sig_" + str(sigma) + ".pdf", bbox_inches='tight')
         plt.show()
 
