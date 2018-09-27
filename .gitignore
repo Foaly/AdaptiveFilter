@@ -6,6 +6,8 @@ venv
 
 # Raw files
 System*.mat
+Test.mat
+Training.mat
 
 # Latex
 *.aux
