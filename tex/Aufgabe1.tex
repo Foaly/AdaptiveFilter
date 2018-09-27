@@ -53,7 +53,7 @@ Dies ist als $n[k]$ in der schematischen Darstellung A.2 in \cite{moschytz2000bo
 Dadurch lässt sich Testen, welche Algorithmus stabiler und weniger anfällig gegenüber Rauschen ist und sich besser für eine schlechte Übertragungsstrecke einsetzen lässt.
 Für die Varianz des Rauschens $\sigma^2$ wurden verschiedene Werte angenommen ($\sigma^2 \in \{0.001, 0.1, 1, 10\}$) und ihr Einfluss auf das Fehlerverhalten der adaptiven Algorithmen untersucht.
 Wenig überraschend bedeutet eine Zunahme der Varianz des Rauschen ebenfalls eine Zunahme im quadratischen Fehler.
-Vergleicht man die Abbildung \ref{fig:N5,} welches mit einem AWGN mit $\sigma^2 = 0.001$ berechnet wurde, mit der Abbildung \ref{fig:sig0.1} ($\sigma^2 = 0.1$) so wird deutlich wie stark das Rauschen die Leistung des adaptiven Filters schwächt.
+Vergleicht man die Abbildung \ref{fig:N5}, welche mit einem AWGN mit $\sigma^2 = 0.001$ berechnet wurde, mit der Abbildung \ref{fig:sig0.1} ($\sigma^2 = 0.1$) so wird deutlich wie stark das Rauschen die Leistung des adaptiven Filters schwächt.
 In Abbildung \ref{fig:N5}, \ref{fig:sig0.1} und \ref{fig:sig1} ist noch erkennbar, dass die Filter mit ansteigenden Werten für $\sigma^2$ auf einen jeweils angestiegenen Fehlerwert konvergieren.
 In \ref{fig:sig10} mit $\sigma^2 = 10$ ist kein Konvergieren mehr sichtbar.
 Bei Betrachten der Plots mit verschiedenen Werten für $\sigma^2$ fällt erneut auf, dass der LMS im Vergleich zum RLS eine stärke Toleranz gegenüber Rauscheinflüssen aufweist.
@@ -82,13 +82,50 @@ Dies lässt darauf schließen, dass der Signal-Rausch-Abstand (SNR) so gering is
 \end{figure}
 
 
-\subsection{Einfluss des Vergessensfaktors $\rho$}
+\subsection{Einfluss des Vergessensfaktors \boldmath{$\rho$}}
 
-Bisher bei allen Plots 0.9
+Der Vergessensfaktor $\rho$ ist ein Parameter des RLS Algorithmus und liegt im Wertebereich $0 < \rho \leq 1$.
+Er dient als Faktor, der bestimmt wie stark in der Vergangenheit zurückliegende Werte gewichtet werden.
+Ein Vegessensfaktor von 1 bedeutet, dass alle bisherigen Wert in die Berechnung mit einbezogen werden.
+Ist der Wert von $\rho$ sehr gering, so werden nur die kleiner Teil der am Kürzesten zurückliegenden Werte berücksichtigt.
+Während ein hoher Wert dazu führt, dass der RLS Algorithmus sich schlecht an ein sich veränderndes System anpassen kann (siehe Abschnitt \ref{sec:Systemwechsel} Systemwechsel), führt ein zu niedriger Wert zu Stabilitätsproblemen, da nie genug Werte miteinbezogen werden, um das System zu identifizieren.
+Bei den bisher abgebildeten Plots \ref{fig:N1} bis \ref{fig:sig10} wurde jeweils ein Vergessensfaktor $\rho = 0.9$ verwendet.
 
-\subsection{Einfluss des Schrittweite $\mu$}
+\textbf{??? evtl. Plots ???}
 
-Bisher bei allen Plots 0.01
+\subsection{Einfluss des Schrittweite \boldmath{$\mu$}}
+
+Die Schrittweite $\mu$ ist ein Parameter des LMS Algorithmus.
+Er kann Werte zwischen $0 < \mu \leq 1$ annehmen und ist ein Faktor der bei jeder Iteration den Fehler $e[n] = d[n] - y[n]$ gewichtet.
+Dadurch lässt sich die Geschwindigkeit der Adaption des Algorithmus einstellen.
+Ein hoher Wert lässt den Fehler schneller konvergieren, kann allerdings dazu führen, dass das optimal Fehlerminimum nicht erreicht werden kann und dieses in jeder Iteration über- bzw. unterschritten wird.
+In den Abbildungen \ref{fig:mu0.01} bis \ref{fig:mu0.2} ist dies mit Hilfe verschiedener Werte für $\mu$ beispielhaft dargestellt ($N=5, \sigma^2=0.01$).
+In Abbildung \ref{fig:mu0.01} ist $\mu = 0.01$ was zu einer vergleichsweise langsamen An­nä­herung des Fehlers an den Wert 0 führt, welcher aber erreicht wird.
+Wird, wie in Abbildung \ref{fig:mu0.1}, $\mu = 0.1$ gesetzt konvergiert der Fehler zwar schneller, aber erreicht 0 nie ganz (siehe rote gestrichelte Linie für den Durchschnitt) und oszilliert leicht um diesen Wert.
+Ein noch höherer Wert, wie $\mu = 0.2$ verdeutlicht das Über- und Unterschreiten des optimalen Fehlerminimums deutlich (siehe \ref{fig:mu0.2})
+Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittweite von $\mu = 0.01$ erzeugt.
+
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.6\textwidth]{{{figures/lms_N_5_var_0.001_mu_0.01}}}
+ \caption{LMS mit einer Schrittweite $\mu = 0.01$}
+	\label{fig:mu0.01}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.6\textwidth]{{{figures/lms_N_5_var_0.001_mu_0.1}}}
+ \caption{LMS mit einer Schrittweite $\mu = 0.1$}
+	\label{fig:mu0.1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.6\textwidth]{{{figures/lms_N_5_var_0.001_mu_0.2}}}
+ \caption{LMS mit einer Schrittweite $\mu = 0.2$}
+	\label{fig:mu0.2}
+\end{figure}
 
 
 
@@ -105,7 +142,7 @@ Bisher bei allen Plots 0.01
 
 
 \section{Systemwechsel}
-\label{sec:3}
+\label{sec:Systemwechsel}
 
 \subsection{Adaptionsverhalten}
 
