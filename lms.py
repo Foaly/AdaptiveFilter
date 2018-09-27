@@ -21,6 +21,7 @@ def smoother(x, N):
 def lms(x, d, M, μ):
 
     N = x.size
+    W = np.zeros((M, N))
     w = np.zeros(M)
     e = np.zeros(N)
     y = np.zeros(N)
@@ -34,9 +35,11 @@ def lms(x, d, M, μ):
         # Aufdatierung des Koeffizientenvektors
         w += μ * e[n] * x_n
 
+        W[:, n] = w
+
     # Quadratischer Fehler
     e = np.square(e)
-    return w, e, y
+    return W, e, y
 
 
 # x   = Eingangsvektor
@@ -54,6 +57,7 @@ def rls(x, d, M, rho):
     inv_R = p0 * np.identity(M)
 
     N = x.size
+    W = np.zeros((M, N))
     w = np.zeros(M)
     e = np.zeros(N)
     y = np.zeros(N)
@@ -77,9 +81,11 @@ def rls(x, d, M, rho):
         # Aufdatieren der Inversen der deterministischen Autokorrelationsmatrix
         inv_R = 1 / rho * (inv_R - np.dot(np.dot(z, x_n.transpose()), inv_R))
 
+        W[:, n] = w
+
     # Quadratischer Fehler
     e = np.square(e)
-    return w, e, y
+    return W, e, y
 
 def addNoise(x, variance):
     sigma = np.sqrt(variance)
@@ -87,45 +93,61 @@ def addNoise(x, variance):
 
 
 μ = 0.01
-rho = 0.7
+rho = 0.9
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
-mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
+# mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
 
-# x = mat_FIR["X"][0]
-x = mat_FIR_Systemwechsel["X"][0]
+x = mat_FIR["X"][0]
+# x = mat_FIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
-# d_ = mat_FIR["D_"][0]
-d_ = mat_FIR_Systemwechsel["D_"][0]
+d_ = mat_FIR["D_"][0]
+# d_ = mat_FIR_Systemwechsel["D_"][0]
 
 
 for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
-    for N in [5]:
+    for N in [1, 2, 5]:
         d = addNoise(d_, variance)
+
+        end = 2000
 
         w1, e1, y1 = lms(x, d, N, μ)
         w2, e2, y2 = rls(x, d, N, rho)
+
+        avg_e1 = np.average(e1)
+        avg_e2 = np.average(e2)
 
         f, axarr = plt.subplots(2)
         plt.subplots_adjust(hspace=0.5)
         #f.tight_layout()
         e1 = smoother(e1, 30)
-        axarr[0].plot(e1, linewidth=1.2)
+        axarr[0].plot(e1[:end], 'b', linewidth=1)
+        axarr[0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
         axarr[0].set_title('LMS')
         axarr[0].set_xlabel("Samples")
         axarr[0].set_ylabel("Error")
         axarr[0].grid(True)
-        axarr[0].set_xlim(-1)
+        axarr[0].set_xlim([-1, end])
 
-        e2 = smoother(e2, 30)
-        axarr[1].plot(e2, linewidth=1.2)
-        axarr[1].set_title('RLS')
+        # e2 = smoother(e2, 30)
+        # axarr[1].plot(e2[:end], 'b', linewidth=1)
+        # axarr[1].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
+        # axarr[1].set_title('RLS')
+        # axarr[1].set_xlabel("Samples")
+        # axarr[1].set_ylabel("Error")
+        # axarr[1].grid(True)
+        # axarr[1].set_xlim([-1, end])
+
+        coeffCount = w2.shape[0]
+        for coeff in range(0, coeffCount):
+            axarr[1].plot(w2[coeff], linewidth=1)
+        legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
+        axarr[1].legend(legend, loc='right', title="Final Weights")
+        axarr[1].set_title('Filterkoeffizienten')
         axarr[1].set_xlabel("Samples")
-        axarr[1].set_ylabel("Error")
-        axarr[1].grid(True)
-        axarr[1].set_xlim(-1)
+        axarr[1].set_ylabel("Koeffizienten")
 
-        # plt.savefig("N_" + str(N) + "_sig_" + str(sigma) + ".pdf", bbox_inches='tight')
+        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
         plt.show()
 
