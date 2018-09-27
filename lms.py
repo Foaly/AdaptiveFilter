@@ -93,7 +93,7 @@ def addNoise(x, variance):
 
 
 μ = 0.01
-rho = 0.9
+rho = 0.7
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
 # mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
@@ -130,24 +130,24 @@ for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
         axarr[0].grid(True)
         axarr[0].set_xlim([-1, end])
 
-        # e2 = smoother(e2, 30)
-        # axarr[1].plot(e2[:end], 'b', linewidth=1)
-        # axarr[1].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
-        # axarr[1].set_title('RLS')
-        # axarr[1].set_xlabel("Samples")
-        # axarr[1].set_ylabel("Error")
-        # axarr[1].grid(True)
-        # axarr[1].set_xlim([-1, end])
-
-        coeffCount = w2.shape[0]
-        for coeff in range(0, coeffCount):
-            axarr[1].plot(w2[coeff], linewidth=1)
-        legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
-        axarr[1].legend(legend, loc='right', title="Final Weights")
-        axarr[1].set_title('Filterkoeffizienten')
+        e2 = smoother(e2, 30)
+        axarr[1].plot(e2[:end], 'b', linewidth=1)
+        axarr[1].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
+        axarr[1].set_title('RLS')
         axarr[1].set_xlabel("Samples")
-        axarr[1].set_ylabel("Koeffizienten")
+        axarr[1].set_ylabel("Error")
+        axarr[1].grid(True)
+        axarr[1].set_xlim([-1, end])
 
-        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
+        # coeffCount = w2.shape[0]
+        # for coeff in range(0, coeffCount):
+        #     axarr[1].plot(w2[coeff], linewidth=1)
+        # legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
+        # axarr[1].legend(legend, loc='right', title="Final Weights")
+        # axarr[1].set_title('Filterkoeffizienten')
+        # axarr[1].set_xlabel("Samples")
+        # axarr[1].set_ylabel("Koeffizienten")
+
+        plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
         plt.show()
 
