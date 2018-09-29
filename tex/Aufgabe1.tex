@@ -5,44 +5,59 @@ Die vorliegende Aufgabe dreht sich um die Systemidentifikation zweier System.
 Dafür wurden in der Aufgabenstellung jeweils ein FIR und ein IIR Filter gegeben.
 Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollte die Koeffizienten der gegebenen System identifiziert werden.
 Als Vorbereitung auf die Systemidentifikation wurden der Least-Mean-Square Algorithmus (LMS) und der Recursive-Least-Squares Algorithmus mit Vergessenfaktor (RLS) implementiert.
-Die Implementation erfolgte in Python \footnote{Software Repository:\url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S.145).
+Die Implementation erfolgte in Python \footnote{Software Repository: \url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S.145).
 
 \section{FIR-Filter}
 \label{sec:fir}
 
 Die erste Aufgabe ist die Systemidentifikation eines FIR Filters mit 5 Koeffizienten.
-Das System wird mit Hilfe des LMS und KLS (mit Vergessensfaktor) Algorithmus identifiziert.
+Das System wird mit Hilfe der LMS und KLS (mit Vergessensfaktor) Algorithmen identifiziert.
 Der Einfluss unterschiedlicher Parameter, wie die Anzahl der Filterkoeffizienten, die Varianz des hinzugefügten Rauschens und die Werte für Schrittweite oder Vergessensfaktor auf das Ergebnis wird dabei untersucht.
 
-In den entstandenen Plots wird der quadratischen Fehlers (Mean-Square-Error bzw. MSE) über den zeitlichen Verlauf in Samplen dargestellt. 
-Ein gegen 0 konvergierender Verlauf des Fehlers ist wünschenswert, da dies bedeutet, dass die Differenz zwischen Ausgang des Filters und dem gewünschten Signal kleiner wird und der damit Algorithmus sich selbst verbessert.
-Die gestrichelte Rote Linie zeigt den Durchschnittswert des Fehlers an, welche es vereinfacht den Wert abzulesen, auf den der Fehler konvergiert.
+\textbf{??? Bild FIR-System aus Aufgabe ???}
+
+
+In den entstandenen Plots werden die Ergebnisse des LMS und KLS Algorithmus mit Hilfe von je zwei Plots charakterisiert. 
+Auf der linken Seite ist der quadratischen Fehlers (Mean-Square-Error bzw. MSE) über den zeitlichen Verlauf in Samplen dargestellt. 
+Ein gegen 0 konvergierender Verlauf des Fehlers ist wünschenswert, da dies bedeutet, dass die Differenz zwischen Ausgang des Filters und dem gewünschten Signal kleiner wird und der Algorithmus sein Ergebnis damit selbst verbessert.
+Die gestrichelte rote Linie zeigt den Durchschnittswert des Fehlers an, welche es vereinfacht den Wert abzulesen, auf den der Fehler konvergiert.
 Außerdem sei angemerkt, dass der Plot des Fehler mit einem Rolling Average von 30 Samplen geglättet wurde, um einzelne Ausreißer zu entfernen und die Lesbarkeit zu erhöhen.
+Auf der rechten Seite der Abbildung ist eine Verlaufskurve der des Algorithmus gelernte Filterkoeffizienten zu sehen, woraus sich das Adaptionsverhalten des Algorithmus ablesen lässt.
+Im Idealfall sollten auch diese je auf einen Wert konvergieren.
+Ist dies nicht der Fall, so zeigt dies, dass das Eingangssignal ungeeignet für die Bearbeitung mit diesem Algorithmus ist oder die Einstellung des Algorithmus nicht optimal sind.
+
+
 
 \subsection{Anzahl an Filterkoeffizienten}
 
 Die Anzahl der Filterkoeffizienten ist einer der Parameter, der die Systemidentifikation am Stärksten beeinflusst. 
 Zu erwarten wäre, dass sich das zu identifizierende System mit weniger Koeffizienten als nötig nicht hinreichend genau abbilden lässt. 
 Nach dem Testen verschiedener Mengen an Filterkoeffizienten ($N \in \{1, 2, 5\}$) erwies sich diese Annahme auch als korrekt.
-Dabei fällt auf, dass dem LMS Algorithmus die Approximation mit zu wenig Filterkoeffizienten wesentlich besser gelingt, als der RLS Algorithmus (vgl. die beiden Plots in \ref{fig:N1} und \ref{fig:N2}).
+Dabei fällt auf, dass dem LMS Algorithmus die Approximation mit zu wenig Filterkoeffizienten wesentlich besser gelingt, als der RLS Algorithmus.
+Dies wird besonders im Koeffizientenverlaufsplot in den Abbildungen \ref{fig:N1} und \ref{fig:N2} deutlich.
+Die Fluktuation in der Fehlerkurve ist beim LMS in beiden Abbildungen unwesentlich stärker als beim RLS.
+Betrachtet man jedoch den Verlauf der Koeffizient über die Laufzeit der Algorithmen, so fällt auf, dass der LMS zwar länger benötigt bis die Koeffizienten auf einen Wert konvergieren, sich anschließend aber deutlich stabiler und rauschärmer verhalten als die Koeffizienten des RLS.
+Dies ist jedoch keine Eingenschaft der Algorithmen als solche, sonder wird durch die Einstellung der Parameter des Vergessensfaktors $\rho$ des RLS und der Schrittweite $\mu$ des LMS bedingt (mehr in Abschnitt \ref{sec:FIR_rho} und \ref{sec:FIR_mu}).
+Die unterschiedliche Geschwindigkeit mit der die beiden Algorithmen konvergieren ist ebenfalls darauf zurück zu führen.
+Die Legende in Abbildung \ref{fig:N5} zeigt deutlich, dass beide Algorithmen mit der korrekten Anzahl an Koeffizienten auf das identische, korrekte Ergebnis kommen.
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/N_1_var_0.001}}}
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_1_var_0.001}}}
  \caption{Vergleich zwischen LMS und RLS mit je einem Filterkoeffizienten (N=1)}
 	\label{fig:N1}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/N_2_var_0.001}}}
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_2_var_0.001}}}
  \caption{Vergleich zwischen LMS und RLS mit je zwei Filterkoeffizienten (N=2)}
 	\label{fig:N2}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/N_5_var_0.001}}}
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_5_var_0.001}}}
  \caption{Vergleich zwischen LMS und RLS mit je fünf Filterkoeffizienten (N=5)}
 	\label{fig:N5}
 \end{figure}
@@ -62,27 +77,28 @@ Dies lässt darauf schließen, dass der Signal-Rausch-Abstand (SNR) so gering is
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/N_5_var_0.1}}}
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_5_var_0.1}}}
  \caption{Vergleich zwischen LMS und RLS bei einem AWGN von $\sigma^2 = 0.1$  (N=5)}
 	\label{fig:sig0.1}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/N_5_var_1.0}}}
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_5_var_1.0}}}
  \caption{Vergleich zwischen LMS und RLS bei einem AWGN von $\sigma^2 = 1$  (N=5)}
 	\label{fig:sig1}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/N_5_var_10.0}}}
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_5_var_10.0}}}
  \caption{Vergleich zwischen LMS und RLS bei einem AWGN von $\sigma^2 = 10$  (N=5)}
 	\label{fig:sig10}
 \end{figure}
 
 
 \subsection{Einfluss des Vergessensfaktors \boldmath{$\rho$}}
+\label{sec:FIR_rho}
 
 Der Vergessensfaktor $\rho$ ist ein Parameter des RLS Algorithmus und liegt im Wertebereich $0 < \rho \leq 1$.
 Er dient als Faktor, der bestimmt wie stark in der Vergangenheit zurückliegende Werte gewichtet werden.
@@ -94,6 +110,7 @@ Bei den bisher abgebildeten Plots \ref{fig:N1} bis \ref{fig:sig10} wurde jeweils
 \textbf{??? evtl. Plots ???}
 
 \subsection{Einfluss des Schrittweite \boldmath{$\mu$}}
+\label{sec:FIR_mu}
 
 Die Schrittweite $\mu$ ist ein Parameter des LMS Algorithmus.
 Er kann Werte zwischen $0 < \mu \leq 1$ annehmen und ist ein Faktor der bei jeder Iteration den Fehler $e[n] = d[n] - y[n]$ gewichtet.
@@ -108,21 +125,21 @@ Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittwe
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/lms_N_5_var_0.001_mu_0.01}}}
+      \includegraphics[width=0.6\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.01}}}
  \caption{LMS mit einer Schrittweite $\mu = 0.01$}
 	\label{fig:mu0.01}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/lms_N_5_var_0.001_mu_0.1}}}
+      \includegraphics[width=0.6\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.1}}}
  \caption{LMS mit einer Schrittweite $\mu = 0.1$}
 	\label{fig:mu0.1}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/lms_N_5_var_0.001_mu_0.2}}}
+      \includegraphics[width=0.6\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.2}}}
  \caption{LMS mit einer Schrittweite $\mu = 0.2$}
 	\label{fig:mu0.2}
 \end{figure}
@@ -130,6 +147,14 @@ Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittwe
 
 
 \subsection{Wahl des Lernalgorithmus}
+
+generell: 
+- LMS stabiler als RLS, weniger Fluktuation
+- RLS reagiert schneller
+- LMS leicht weniger Rausch empfindlich
+
+
+
 \files{main.py}
 
 

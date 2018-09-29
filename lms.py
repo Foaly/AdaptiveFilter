@@ -87,13 +87,17 @@ def rls(x, d, M, rho):
     e = np.square(e)
     return W, e, y
 
+
+# x        = Eingangsvektor
+# variance = Varianz des Rauschen
+
 def addNoise(x, variance):
     sigma = np.sqrt(variance)
     return x + np.random.normal(0.0, sigma, x.size)
 
 
 μ = 0.01
-rho = 0.7
+rho = 0.9
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
 # mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
@@ -106,7 +110,7 @@ d_ = mat_FIR["D_"][0]
 # d_ = mat_FIR_Systemwechsel["D_"][0]
 
 
-for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
+for variance in [0.001, 0.1, 1.0, 10.0]:
     for N in [1, 2, 5]:
         d = addNoise(d_, variance)
 
@@ -118,36 +122,47 @@ for variance in [0.001]:  # , 0.1, 1.0, 10.0]:
         avg_e1 = np.average(e1)
         avg_e2 = np.average(e2)
 
-        f, axarr = plt.subplots(2)
-        plt.subplots_adjust(hspace=0.5)
-        #f.tight_layout()
+        f, axarr = plt.subplots(2, 2, figsize=(12, 5))
+        f.tight_layout()
+        plt.subplots_adjust(hspace=0.5, wspace=0.2)
+
         e1 = smoother(e1, 30)
-        axarr[0].plot(e1[:end], 'b', linewidth=1)
-        axarr[0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
-        axarr[0].set_title('LMS')
-        axarr[0].set_xlabel("Samples")
-        axarr[0].set_ylabel("Error")
-        axarr[0].grid(True)
-        axarr[0].set_xlim([-1, end])
+        axarr[0][0].plot(e1[:end], 'b', linewidth=1)
+        axarr[0][0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
+        axarr[0][0].set_title('LMS (MSE)')
+        axarr[0][0].set_xlabel("Samples")
+        axarr[0][0].set_ylabel("Error")
+        axarr[0][0].grid(True)
+        axarr[0][0].set_xlim([-1, end])
+
+        coeffCount = w1.shape[0]
+        for coeff in range(0, coeffCount):
+            axarr[0][1].plot(w1[coeff][:end], linewidth=1)
+        legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
+        axarr[0][1].legend(legend, loc='right', title="Final Weights")
+        axarr[0][1].set_title('LMS (Filterkoeffizienten)')
+        axarr[0][1].set_xlabel("Samples")
+        axarr[0][1].set_ylabel("Koeffizienten")
 
         e2 = smoother(e2, 30)
-        axarr[1].plot(e2[:end], 'b', linewidth=1)
-        axarr[1].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
-        axarr[1].set_title('RLS')
-        axarr[1].set_xlabel("Samples")
-        axarr[1].set_ylabel("Error")
-        axarr[1].grid(True)
-        axarr[1].set_xlim([-1, end])
+        axarr[1][0].plot(e2[:end], 'b', linewidth=1)
+        axarr[1][0].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
+        axarr[1][0].set_title('RLS (MSE)')
+        axarr[1][0].set_xlabel("Samples")
+        axarr[1][0].set_ylabel("Error")
+        axarr[1][0].grid(True)
+        axarr[1][0].set_xlim([-1, end])
 
-        # coeffCount = w2.shape[0]
-        # for coeff in range(0, coeffCount):
-        #     axarr[1].plot(w2[coeff], linewidth=1)
-        # legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
-        # axarr[1].legend(legend, loc='right', title="Final Weights")
-        # axarr[1].set_title('Filterkoeffizienten')
-        # axarr[1].set_xlabel("Samples")
-        # axarr[1].set_ylabel("Koeffizienten")
+        coeffCount = w2.shape[0]
+        for coeff in range(0, coeffCount):
+            axarr[1][1].plot(w2[coeff][:end], linewidth=1)
+        legend = ['w' + str(i+1) + ' = ' + str(np.around(w2[i, -1], 3)) for i in range(0, coeffCount)]
+        axarr[1][1].legend(legend, loc='right', title="Final Weights")
+        axarr[1][1].set_title('RLS (Filterkoeffizienten)')
+        axarr[1][1].set_xlabel("Samples")
+        axarr[1][1].set_ylabel("Koeffizienten")
 
         plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
+        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + "_mu_" + str(μ) + ".pdf", bbox_inches='tight')
         plt.show()
 
