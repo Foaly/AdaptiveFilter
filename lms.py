@@ -330,8 +330,8 @@ for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
         trainErrors[i] = 0
         testErrors[i] = 0
 
-    plt.clf()
-    fig = plt.figure()
+    plt.figure(figsize=(12, 5))
+    plt.tight_layout()
     plt.subplot(211)
 
     plt.plot(train_data[M:], 'k--')
@@ -340,14 +340,19 @@ for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
     plt.plot(test_data[M:], 'k-.')
     plt.plot(testPrediction, 'b')
     plt.xlim([M2, N])
-    plt.legend(['Train data', 'Training', 'Test data', 'Test'])
+    plt.legend(['Train data', 'Training', 'Test data', 'Testing'])
+    #plt.xlabel("Samples")
+    plt.ylabel("Amplitude")
 
     plt.subplot(212)
     plt.plot(trainErrors[:], 'r')
     plt.plot(testErrors[:N], 'b')
     plt.xlim([M2, N])
-    plt.legend(['MSE Train', 'MSE Test'])
+    plt.legend(['Train', 'Test'])
+    plt.xlabel("Samples")
+    plt.ylabel("MSE")
 
+    plt.savefig("klms_" + str(M) + ".pdf", bbox_inches='tight')
     plt.show()
 
     # plt.figure()
