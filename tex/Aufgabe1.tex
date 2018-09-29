@@ -14,8 +14,12 @@ Die erste Aufgabe ist die Systemidentifikation eines FIR Filters mit 5 Koeffizie
 Das System wird mit Hilfe der LMS und KLS (mit Vergessensfaktor) Algorithmen identifiziert.
 Der Einfluss unterschiedlicher Parameter, wie die Anzahl der Filterkoeffizienten, die Varianz des hinzugefügten Rauschens und die Werte für Schrittweite oder Vergessensfaktor auf das Ergebnis wird dabei untersucht.
 
-\textbf{??? Bild FIR-System aus Aufgabe ???}
-
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{figures/FIR_System.png}
+ \caption{Blockschaltbild des zu untersuchenden FIR Systems ($h_0 = 0.7, h_1 = 0.1, h_2 = -0.03, h_3 = 0.18, h_4 = -0.24$).}
+	\label{fig:FIR_System}
+\end{figure}
 
 In den entstandenen Plots werden die Ergebnisse des LMS und KLS Algorithmus mit Hilfe von je zwei Plots charakterisiert. 
 Auf der linken Seite ist der quadratischen Fehlers (Mean-Square-Error bzw. MSE) über den zeitlichen Verlauf in Samplen dargestellt. 
@@ -33,13 +37,14 @@ Ist dies nicht der Fall, so zeigt dies, dass das Eingangssignal ungeeignet für 
 Die Anzahl der Filterkoeffizienten ist einer der Parameter, der die Systemidentifikation am Stärksten beeinflusst. 
 Zu erwarten wäre, dass sich das zu identifizierende System mit weniger Koeffizienten als nötig nicht hinreichend genau abbilden lässt. 
 Nach dem Testen verschiedener Mengen an Filterkoeffizienten ($N \in \{1, 2, 5\}$) erwies sich diese Annahme auch als korrekt.
-Dabei fällt auf, dass dem LMS Algorithmus die Approximation mit zu wenig Filterkoeffizienten wesentlich besser gelingt, als der RLS Algorithmus.
-Dies wird besonders im Koeffizientenverlaufsplot in den Abbildungen \ref{fig:N1} und \ref{fig:N2} deutlich.
-Die Fluktuation in der Fehlerkurve ist beim LMS in beiden Abbildungen unwesentlich stärker als beim RLS.
-Betrachtet man jedoch den Verlauf der Koeffizient über die Laufzeit der Algorithmen, so fällt auf, dass der LMS zwar länger benötigt bis die Koeffizienten auf einen Wert konvergieren, sich anschließend aber deutlich stabiler und rauschärmer verhalten als die Koeffizienten des RLS.
+Dabei wird deutlich, dass sowohl dem LMS als auch dem RLS Algorithmus die Approximation mit zu wenig Filterkoeffizienten gleich gut gelingt.
+Vergleicht man die Fluktuation in der Fehlerkurve in Abbildungen \ref{fig:N1} und \ref{fig:N2} so wird deutlich, dass diese bei beide Algorithmen nahezu identisch ist.
+Lediglich der Anfang des LMS Algorithmus weißt einen höheren Fehler auf, welcher auf Grund der längeren Konvergierungszeit von der Glättung der Plots nicht so stark beeinflusst wird.
+Betrachtet man jedoch den Verlauf der Koeffizient über die Laufzeit der Algorithmen, so fällt auf, dass der LMS länger benötigt bis die Koeffizienten auf einen Wert konvergieren.
+Der Koeffizientenverlauf des RLS hat nach Erreichen des Wertes auch ein deutlich stabileres und rauschärmeres Verhalten als die Koeffizienten des LMS.
 Dies ist jedoch keine Eingenschaft der Algorithmen als solche, sonder wird durch die Einstellung der Parameter des Vergessensfaktors $\rho$ des RLS und der Schrittweite $\mu$ des LMS bedingt (mehr in Abschnitt \ref{sec:FIR_rho} und \ref{sec:FIR_mu}).
 Die unterschiedliche Geschwindigkeit mit der die beiden Algorithmen konvergieren ist ebenfalls darauf zurück zu führen.
-Die Legende in Abbildung \ref{fig:N5} zeigt deutlich, dass beide Algorithmen mit der korrekten Anzahl an Koeffizienten auf das identische, korrekte Ergebnis kommen.
+Die Legende in Abbildung \ref{fig:N5} zeigt deutlich, dass beide Algorithmen mit der korrekten Anzahl an Koeffizienten auf das identische, korrekte Ergebnis kommen (vgl. mit Abb. \ref{fig:FIR_System}).
 
 \begin{figure}[H]
   \centering
@@ -67,12 +72,12 @@ In der Messstrecke des Systems wird ein AWGN (Additive White Gaussian Noise bzw.
 Dies ist als $n[k]$ in der schematischen Darstellung A.2 in \cite{moschytz2000book} (S. 211) der Messstrecke gekennzeichnet. 
 Dadurch lässt sich Testen, welche Algorithmus stabiler und weniger anfällig gegenüber Rauschen ist und sich besser für eine schlechte Übertragungsstrecke einsetzen lässt.
 Für die Varianz des Rauschens $\sigma^2$ wurden verschiedene Werte angenommen ($\sigma^2 \in \{0.001, 0.1, 1, 10\}$) und ihr Einfluss auf das Fehlerverhalten der adaptiven Algorithmen untersucht.
-Wenig überraschend bedeutet eine Zunahme der Varianz des Rauschen ebenfalls eine Zunahme im quadratischen Fehler.
+Wenig überraschend bedeutet eine Zunahme der Varianz des Rauschen ebenfalls eine Zunahme im quadratischen Fehler und im Adaptionsverhalten der Filterkoeffizienten.
 Vergleicht man die Abbildung \ref{fig:N5}, welche mit einem AWGN mit $\sigma^2 = 0.001$ berechnet wurde, mit der Abbildung \ref{fig:sig0.1} ($\sigma^2 = 0.1$) so wird deutlich wie stark das Rauschen die Leistung des adaptiven Filters schwächt.
-In Abbildung \ref{fig:N5}, \ref{fig:sig0.1} und \ref{fig:sig1} ist noch erkennbar, dass die Filter mit ansteigenden Werten für $\sigma^2$ auf einen jeweils angestiegenen Fehlerwert konvergieren.
-In \ref{fig:sig10} mit $\sigma^2 = 10$ ist kein Konvergieren mehr sichtbar.
-Bei Betrachten der Plots mit verschiedenen Werten für $\sigma^2$ fällt erneut auf, dass der LMS im Vergleich zum RLS eine stärke Toleranz gegenüber Rauscheinflüssen aufweist.
-Ebenfalls auffällig ist die deutliche Ähnlichkeit der beiden Kurven der unterschiedlichen Algorithmen in Abbildung \ref{fig:sig10}.
+In Abbildung \ref{fig:N5}, \ref{fig:sig0.1}, \ref{fig:sig1} und \ref{fig:sig10} ist außerdem erkennbar, dass die Filter mit ansteigenden Werten für $\sigma^2$ auf einen jeweils angestiegenen Fehlerwert konvergieren.
+In \ref{fig:sig10} mit $\sigma^2 = 10$ ist im Plot des quadratischen Fehlers kein Konvergieren mehr sichtbar.
+Bei Betrachten des Verlaufs der Koeffizienten mit verschiedenen Werten für $\sigma^2$ fällt erneut auf, dass der RLS im Vergleich zum LMS eine stärke Toleranz gegenüber Rauscheinflüssen aufweist.
+Ebenfalls auffällig ist die deutliche Ähnlichkeit der beiden Fehlerkurven der unterschiedlichen Algorithmen in Abbildung \ref{fig:sig10}.
 Dies lässt darauf schließen, dass der Signal-Rausch-Abstand (SNR) so gering ist, dass das Rauschen das eigentlich Signal nahezu komplett überdeckt.
 
 \begin{figure}[H]
@@ -105,9 +110,19 @@ Er dient als Faktor, der bestimmt wie stark in der Vergangenheit zurückliegende
 Ein Vegessensfaktor von 1 bedeutet, dass alle bisherigen Wert in die Berechnung mit einbezogen werden.
 Ist der Wert von $\rho$ sehr gering, so werden nur die kleiner Teil der am Kürzesten zurückliegenden Werte berücksichtigt.
 Während ein hoher Wert dazu führt, dass der RLS Algorithmus sich schlecht an ein sich veränderndes System anpassen kann (siehe Abschnitt \ref{sec:Systemwechsel} Systemwechsel), führt ein zu niedriger Wert zu Stabilitätsproblemen, da nie genug Werte miteinbezogen werden, um das System zu identifizieren.
-Bei den bisher abgebildeten Plots \ref{fig:N1} bis \ref{fig:sig10} wurde jeweils ein Vergessensfaktor $\rho = 0.9$ verwendet.
+Betrachtet man die Abbildungen \ref{fig:rho_vergleich} so wird dies ebenfalls deutlich.
+Ein niedrigerer Wert für $\rho$ führt zu einem höheren quadratischen Fehler und einem deutlich sprunghaftem und rauschhaften Adaptionsverhalten der Filterkoeffizienten.
+Laut Moschytz \cite{moschytz2000book} (S. 145) liegt der Wert für den Vergessensfaktor typischerweise zwischen $0.95 < \rho < 1$.
+Bei den bisher abgebildeten Plots \ref{fig:N1} bis \ref{fig:sig10} wurde jeweils ein Vergessensfaktor $\rho = 0.99$ verwendet.
 
-\textbf{??? evtl. Plots ???}
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR/N_2_var_0.001_rho_vergleich}}}
+ \caption{Vergleich zwischen verschiedenen Werten für $\rho$ des RLS ($\rho = 0.5$ oben und $\rho = 0.99$ unten) }
+	\label{fig:rho_vergleich}
+\end{figure}
+
+
 
 \subsection{Einfluss des Schrittweite \boldmath{$\mu$}}
 \label{sec:FIR_mu}
@@ -152,6 +167,7 @@ generell:
 - LMS stabiler als RLS, weniger Fluktuation
 - RLS reagiert schneller
 - LMS leicht weniger Rausch empfindlich
+- bei unverandertlichen systemen sehr ähnliche ergebnisse
 
 
 

@@ -97,7 +97,7 @@ def addNoise(x, variance):
 
 
 μ = 0.01
-rho = 0.9
+rho = 0.99
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
 # mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
