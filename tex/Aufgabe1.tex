@@ -165,13 +165,21 @@ Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittwe
 
 \subsection{Wahl des Lernalgorithmus}
 
-generell: 
-- unterschiedliche Konvergenzeit
-- unterschiedliche Laufzeit (RLS mehr)
-- RLS ist schneller als LMS, weniger Fluktuation
-- RLS reagiert schneller
-- RLS leicht weniger Rausch empfindlich
-- bei unveränderlichen Systemen sehr ähnliche ergebnisse
+Betrachtet man grundlegend nur den Code der beiden Algorithmen so wird deutlich, dass die Algorithmen unterschiedliche Komplexitäten und daraus resultierende Laufzeiten haben.
+Der RLS dabei weist eine höhere Komplexität und Laufzeit auf als der LMS.
+
+Außerdem unterscheiden sich die beiden Algorithmen in ihrer Konvergenzzeit der Filterkoeffizienten.
+In den hier betrachteten Abbildungen konvergieren die Filterkoeffizienten des RLS schneller als die des LMS, selbst bei einem größeren Wert für die Schrittweite $\mu$ des LMS.
+Der Grund dafür liegt im Aufbau der Algorithmen.
+Der LMS berücksichtigt bei jeder Interation seiner Adaption jeweils nur die letzten $N$ Werte.
+Der RLS hingegen bezieht durch das Aufdatieren der inversen deterministischen Autokorellationsmatrix alle bisherigen Werte, gewichtet durch einen Vergessenfaktor, mit in die Berechnung ein.
+Dies führt zur Beobachteten schnelleren Konvergenzzeit des RLS.
+Durch das Wählen einer entsprechende Schrittweite lassen sich beim LMS zwar ähnlich schnelle Konvergenzzeiten der Filterkoeffizienten erreichen, allerdings führt dies zu sehr verrauschten und schwankenden Filterkoeffizienten, da der LMS durch die größere Schrittweite die Optimalwerte ständig über- und unterschreitet.
+Durch das Einbeziehen aller bisheriger Werte erziehlt der RLS wesentlich stabiler Filterkoeffizienten.
+Auch das hinzugefügte AWGS stört aus diesem Grund den Verlauf der Filterkoeffizienten des RLS nicht so stark wie die des LMS.
+Da es sich bei dem vorliegenden Signal um einen stationären, stochastischen Prozess handelt spielt der Vergessenfaktor $\rho$ des RLS für die Konvergenzzeit noch keine Rolle.
+
+Auf Grund der Eigenschaften des Prozesses liefern beide beide Algorithmen bei der entsprechenden Wahl der Parameter sehr ähnliche Ergebnisse.
 
 
 
@@ -258,10 +266,10 @@ Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS
 
 Die korrekten Werte der Koeffizienten konnte weder mit dem LMS noch dem RLS mit verschiedenen Parametern hinreichend genau approximiert werden.
 Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und RLS Algorithmus perfekt nachzubilden.
-Dies wurde in Abschnitt \ref{sec:iir} approximiert.
+Dies wurde, wie in Abschnitt \ref{sec:iir} beschrieben, approximiert.
 Bei einem IIR System ist dies jedoch nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und RLS Algorithmen nicht abgebildet wird.
 Auf Grundlage dessen ist mit den beiden Algorithmen nur eine Approximation des IIR Systems möglich.
-Dies erklärt auch warum die exakten Filtergewichte aus \ref{figIIR_System} selbst bei einem hohen Wert für $N$ nicht erreicht wurden.
+Dies erklärt auch warum die exakten Filtergewichte aus \ref{fig:IIR_System} selbst bei einem hohen Wert für $N$ nicht erreicht wurden.
 Bei der Robustheit gegenüber Rauschen erweist sich der RLS gegenüber dem LMS erneut als robuster.
 
 
@@ -270,6 +278,11 @@ Bei der Robustheit gegenüber Rauschen erweist sich der RLS gegenüber dem LMS e
 
 \section{Systemwechsel}
 \label{sec:Systemwechsel}
+
+- weil LMS nur N werte in die Vergangenheit guckt ist er gut für veränderlich signale
+- KLS was Vorteil war (Einbeziehen aller bisherigen Werte) ist nun Nachteil
+- Vergessenfaktor too the rescue!
+
 
 \subsection{Adaptionsverhalten}
 
@@ -288,7 +301,7 @@ Bei der Robustheit gegenüber Rauschen erweist sich der RLS gegenüber dem LMS e
   \centering
       \includegraphics[width=0.7\textwidth]{{{figures/klms_10}}}
   \caption{Training mit KLMS 10 Filterkoeffizienten}
-  \label{fig:klms5}
+  \label{fig:klms10}
 \end{figure}
 
 \section{Fehlerfunktion(en)}
