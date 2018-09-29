@@ -364,7 +364,7 @@ for [M, mu, sigma] in [[5, 0.5, 1.0], [10, 0.5, 1.0]]:
     plt.xlabel("Samples")
     plt.ylabel("MSE")
 
-    # plt.savefig(kernelWeigthName + ".pdf", bbox_inches='tight')
+    plt.savefig(kernelWeigthName + ".pdf", bbox_inches='tight')
     plt.show()
 
     plt.figure()
