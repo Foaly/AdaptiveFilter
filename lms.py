@@ -166,3 +166,27 @@ for variance in [0.001, 0.1, 1.0, 10.0]:
         # plt.savefig("N_" + str(N) + "_var_" + str(variance) + "_mu_" + str(μ) + ".pdf", bbox_inches='tight')
         plt.show()
 
+
+# Plots
+# d = addNoise(d_, 0.001)
+# N = 5
+# end = 2000
+#
+# for μ in [0.01, 0.1, 0.2]:
+#     w1, e1, y1 = lms(x, d, N, μ)
+#
+#     avg_e1 = np.average(e1)
+#
+#     plt.figure(figsize=(10, 2.5))
+#     plt.tight_layout()
+#
+#     e1 = smoother(e1, 30)
+#     plt.plot(e1[:end], 'b', linewidth=1)
+#     plt.plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
+#     plt.title('LMS (MSE, μ = ' + str(μ) + ')')
+#     plt.xlabel("Samples")
+#     plt.ylabel("Error")
+#     plt.grid(True)
+#     plt.xlim([-1, end])
+#     plt.savefig("lms_N_5_var_0.001_mu_" + str(μ) + ".pdf", bbox_inches='tight')
+#     plt.show()

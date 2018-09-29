@@ -132,7 +132,7 @@ Er kann Werte zwischen $0 < \mu \leq 1$ annehmen und ist ein Faktor der bei jede
 Dadurch lässt sich die Geschwindigkeit der Adaption des Algorithmus einstellen.
 Ein hoher Wert lässt den Fehler schneller konvergieren, kann allerdings dazu führen, dass das optimal Fehlerminimum nicht erreicht werden kann und dieses in jeder Iteration über- bzw. unterschritten wird.
 In den Abbildungen \ref{fig:mu0.01} bis \ref{fig:mu0.2} ist dies mit Hilfe verschiedener Werte für $\mu$ beispielhaft dargestellt ($N=5, \sigma^2=0.01$).
-In Abbildung \ref{fig:mu0.01} ist $\mu = 0.01$ was zu einer vergleichsweise langsamen An­nä­herung des Fehlers an den Wert 0 führt, welcher aber erreicht wird.
+In Abbildung \ref{fig:mu0.01} ist $\mu = 0.001$ was zu einer vergleichsweise langsamen An­nä­herung des Fehlers an den Wert 0 führt, welcher aber erreicht wird.
 Wird, wie in Abbildung \ref{fig:mu0.1}, $\mu = 0.1$ gesetzt konvergiert der Fehler zwar schneller, aber erreicht 0 nie ganz (siehe rote gestrichelte Linie für den Durchschnitt) und oszilliert leicht um diesen Wert.
 Ein noch höherer Wert, wie $\mu = 0.2$ verdeutlicht das Über- und Unterschreiten des optimalen Fehlerminimums deutlich (siehe \ref{fig:mu0.2})
 Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittweite von $\mu = 0.01$ erzeugt.
@@ -140,21 +140,21 @@ Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittwe
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.01}}}
+      \includegraphics[width=0.7\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.01}}}
  \caption{LMS mit einer Schrittweite $\mu = 0.01$}
 	\label{fig:mu0.01}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.1}}}
+      \includegraphics[width=0.7\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.1}}}
  \caption{LMS mit einer Schrittweite $\mu = 0.1$}
 	\label{fig:mu0.1}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.6\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.2}}}
+      \includegraphics[width=0.7\textwidth]{{{figures/FIR/lms_N_5_var_0.001_mu_0.2}}}
  \caption{LMS mit einer Schrittweite $\mu = 0.2$}
 	\label{fig:mu0.2}
 \end{figure}
