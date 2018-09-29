@@ -194,33 +194,25 @@ def addNoise(x, variance):
 μ = 0.01
 rho = 0.99
 
-mat_FIR = scipy.io.loadmat('System_FIR22')
+# mat_FIR = scipy.io.loadmat('System_FIR25')
+mat_IIR = scipy.io.loadmat('System_IIR25')
 # mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
 
-x = mat_FIR["X"][0]
+# x = mat_FIR["X"][0]
+x = mat_IIR["X"][0]
 # x = mat_FIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
-d_ = mat_FIR["D_"][0]
+# d_ = mat_FIR["D_"][0]
+d_ = mat_IIR["D_"][0]
 # d_ = mat_FIR_Systemwechsel["D_"][0]
-
 
 
 mat_training = scipy.io.loadmat('Training')
 train_data = mat_training['x_training'].flatten()
 
 mat_test = scipy.io.loadmat('Test')
-test_data = mat_test['x_test'].flatten();
-
-
-for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
-    kernel = klmsHelper(mu, sigma)
-    klmsTrain  (kernel, train_data, M)
-    # warning: long computation time
-    # klmsPredict(kernel, test_data, M)
-
-
-
+test_data = mat_test['x_test'].flatten()
 
 
 for variance in [0.001, 0.1, 1.0, 10.0]:
@@ -303,3 +295,10 @@ for variance in [0.001, 0.1, 1.0, 10.0]:
 #     plt.xlim([-1, end])
 #     plt.savefig("lms_N_5_var_0.001_mu_" + str(μ) + ".pdf", bbox_inches='tight')
 #     plt.show()
+
+
+for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
+    kernel = klmsHelper(mu, sigma)
+    klmsTrain  (kernel, train_data, M)
+    # warning: long computation time
+    # klmsPredict(kernel, test_data, M)

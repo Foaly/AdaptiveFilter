@@ -164,10 +164,12 @@ Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittwe
 \subsection{Wahl des Lernalgorithmus}
 
 generell: 
-- LMS stabiler als RLS, weniger Fluktuation
+- unterschiedliche Konvergenzeit
+- unterschiedliche Laufzeit (RLS mehr)
+- RLS ist schneller als LMS, weniger Fluktuation
 - RLS reagiert schneller
-- LMS leicht weniger Rausch empfindlich
-- bei unverandertlichen systemen sehr ähnliche ergebnisse
+- RLS leicht weniger Rausch empfindlich
+- bei unveränderlichen Systemen sehr ähnliche ergebnisse
 
 
 
@@ -176,6 +178,21 @@ generell:
 
 \section{IIR-Filter}
 \label{sec:iir}
+
+Das zweite System das untersucht werden soll ist ein IIR Filter.
+
+Hierbei ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und KLS Algorithmus perfekt nachzubilden.
+Bei einem IIR System ist dies nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und KLS Algorithmen nicht abgebildet wird.
+Auf Grundlage dessen ist nur ein 
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.5\textwidth]{figures/IIR_System.png}
+ \caption{Blockschaltbild des zu untersuchenden IIR Systems ($h_1 = 0.82, h_2 = -0.03$).}
+	\label{fig:FIR_System}
+\end{figure}
+
+
 
 \subsection{Anzahl an Filterkoeffizienten}
 \subsection{Wahl des Lernalgorithmus}
