@@ -88,6 +88,98 @@ def rls(x, d, M, rho):
     return W, e, y
 
 
+
+
+# KLMS
+
+
+# nach Haykin, Liu, Principe, S.34
+def klmsPredict(kernel, x, M):
+    N = x.shape[0]
+    kernel.prediction = [0]
+    kernel.errors = [0]
+
+    for i in range(M, N):
+        # get data slice
+        x_n = x[i - M:i]
+        # reverse
+        x_n = x_n[::-1]
+
+        y = kernel.predict(x_n)
+        kernel.prediction.append(y)
+
+        # calculate error
+        kernel.error = x[i] - y
+        kernel.errors.append(np.square(kernel.error))
+
+
+def klmsTrain(kernel, x, M):
+    N = x.shape[0]
+
+    for i in range(M, N):
+        # get data slice
+        x_n = x[i - M:i]
+        # reverse
+        x_n = x_n[::-1]
+
+        # update with slice
+        kernel.update(x_n, x[i])
+
+
+
+class klmsHelper():
+    """
+    KLMS class
+    Nach Haykin, Liu, Principe, p.34 / Algorithm 2
+    """
+
+    def __init__(
+        self,
+        mu=0.5,
+        sigma=1.0
+    ):
+        self.data = [0]
+        self.weights = [0]
+        self.mu = mu
+        self.sigma = sigma
+        self.error = None
+        self.prediction = [0]
+        self.errors = [0]
+
+        # kernel function
+        self.gauss = lambda a, b: np.exp(-1 * np.square(np.linalg.norm(a - b)) / (2 * np.square(self.sigma)))
+        self.kFun = self.gauss
+
+
+    def predict(self, x_n):
+        # initialize estimate
+        predict = 0
+        for i in range(len(self.weights)):
+            # predict for every datapoint i with according weight (past)
+            predict_i = self.weights[i] * self.kFun(self.data[i], x_n)
+            # sum all datapoints running i to estimate prediction
+            predict += predict_i
+        return predict
+
+
+    def update(self, x_n, desired):
+        # calculate error for current prediction towards desired output
+        self.error = desired - self.predict(x_n)
+        # calculate weight based on error & learning rate
+        new_weight = self.mu * self.error
+        # add weights to stack (past)
+        self.weights.append(new_weight)
+        # add datapoint to stack (past)
+        self.data.append(x_n)
+        # add prediction to stack
+        self.prediction.append(self.predict(x_n))
+
+        self.errors.append(self.error ** 2)
+
+
+
+
+
 # x        = Eingangsvektor
 # variance = Varianz des Rauschen
 
@@ -96,10 +188,13 @@ def addNoise(x, variance):
     return x + np.random.normal(0.0, sigma, x.size)
 
 
+
+# Script
+
 μ = 0.01
 rho = 0.99
 
-mat_FIR = scipy.io.loadmat('System_FIR25')
+mat_FIR = scipy.io.loadmat('System_FIR22')
 # mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
 
 x = mat_FIR["X"][0]
@@ -108,6 +203,24 @@ x = mat_FIR["X"][0]
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
 d_ = mat_FIR["D_"][0]
 # d_ = mat_FIR_Systemwechsel["D_"][0]
+
+
+
+mat_training = scipy.io.loadmat('Training')
+train_data = mat_training['x_training'].flatten()
+
+mat_test = scipy.io.loadmat('Test')
+test_data = mat_test['x_test'].flatten();
+
+
+for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
+    kernel = klmsHelper(mu, sigma)
+    klmsTrain  (kernel, train_data, M)
+    # warning: long computation time
+    # klmsPredict(kernel, test_data, M)
+
+
+
 
 
 for variance in [0.001, 0.1, 1.0, 10.0]:
