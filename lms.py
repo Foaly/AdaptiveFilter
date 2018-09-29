@@ -299,7 +299,15 @@ test_data = mat_test['x_test'].flatten()
 #     plt.show()
 
 
-for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
+for [M, mu, sigma] in [[5, 0.5, 1.0], [10, 0.5, 1.0]]:
+    prefix = 'KLMS_' + str(M) + '_' + str(mu) + '_' + str(sigma)
+    trainErrorName = prefix + '_train_error'
+    trainPredictionName = prefix + '_train_prediction'
+    testErrorName = prefix + '_test_error'
+    testPredictionName = prefix + '_test_prediction'
+    kernelWeigthName = prefix + '_kernel_weights'
+
+    # klms
     # kernel = klmsHelper(mu, sigma)
     # klmsTrain(kernel, train_data, M)
     #
@@ -311,16 +319,19 @@ for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
     #
     # testErrors = kernel.errors
     # testPrediction = kernel.prediction
+    # kernelWeights = kernel.weights
     #
-    # np.savetxt('train_error_' + str(M) + '.txt', trainErrors)
-    # np.savetxt('train_prediction_' + str(M) + '.txt', trainPrediction)
-    # np.savetxt('test_error_' + str(M) + '.txt', testErrors)
-    # np.savetxt('test_prediction_' + str(M) + '.txt', testPrediction)
+    # np.savetxt(trainErrorName + '.txt', trainErrors)
+    # np.savetxt(trainPredictionName + '.txt', trainPrediction)
+    # np.savetxt(testErrorName + '.txt', testErrors)
+    # np.savetxt(testPredictionName + '.txt', testPrediction)
+    # np.savetxt(kernelWeigthName + '.txt', kernel.weights)
 
-    trainErrors = np.loadtxt('train_error_' + str(M) + '.txt')
-    trainPrediction = np.loadtxt('train_prediction_' + str(M) + '.txt')
-    testErrors = np.loadtxt('test_error_' + str(M) + '.txt')
-    testPrediction = np.loadtxt('test_prediction_' + str(M) + '.txt')
+    trainErrors = np.loadtxt(trainErrorName + '.txt')
+    trainPrediction = np.loadtxt(trainPredictionName + '.txt')
+    testErrors = np.loadtxt(testErrorName + '.txt')
+    testPrediction = np.loadtxt(testPredictionName + '.txt')
+    kernelWeights = np.loadtxt(kernelWeigthName + '.txt')
 
     # plotting
     N = len(trainPrediction);
@@ -333,6 +344,7 @@ for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
     plt.figure(figsize=(12, 5))
     plt.tight_layout()
     plt.subplot(211)
+    plt.title('KLMS (N: ' + str(M) + ', μ: ' + str(mu) + ', σ²: ' + str(sigma) + ')')
 
     plt.plot(train_data[M:], 'k--')
     plt.plot(trainPrediction, 'r')
@@ -352,8 +364,8 @@ for [M, mu, sigma] in [[5, 1.0, 1.0], [10, 1.0, 1.0]]:
     plt.xlabel("Samples")
     plt.ylabel("MSE")
 
-    plt.savefig("klms_" + str(M) + ".pdf", bbox_inches='tight')
+    # plt.savefig(kernelWeigthName + ".pdf", bbox_inches='tight')
     plt.show()
 
-    # plt.figure()
-    # plt.plot(kernel.weights)
+    plt.figure()
+    plt.plot(kernelWeights)

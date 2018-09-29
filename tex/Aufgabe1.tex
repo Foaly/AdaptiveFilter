@@ -21,7 +21,7 @@ Der Einfluss unterschiedlicher Parameter, wie die Anzahl der Filterkoeffizienten
 	\label{fig:FIR_System}
 \end{figure}
 
-In den entstandenen Plots werden die Ergebnisse des LMS und KLS Algorithmus mit Hilfe von je zwei Plots charakterisiert. 
+In den entstandenen Plots werden die Ergebnisse des LMS und RLS Algorithmus mit Hilfe von je zwei Plots charakterisiert. 
 Auf der linken Seite ist der quadratischen Fehlers (Mean-Square-Error bzw. MSE) über den zeitlichen Verlauf in Samplen dargestellt. 
 Ein gegen 0 konvergierender Verlauf des Fehlers ist wünschenswert, da dies bedeutet, dass die Differenz zwischen Ausgang des Filters und dem gewünschten Signal kleiner wird und der Algorithmus sein Ergebnis damit selbst verbessert.
 Die gestrichelte rote Linie zeigt den Durchschnittswert des Fehlers an, welche es vereinfacht den Wert abzulesen, auf den der Fehler konvergiert.
@@ -188,7 +188,7 @@ Bei der Systemidentifikation wird hier analog zu Abschnitt \ref{sec:fir} vorgega
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.5\textwidth]{figures/IIR_System.png}
- \caption{Blockschaltbild des zu untersuchenden IIR Systems ($h_1 = 0.82, h_2 = -0.03$).}
+ \caption{Blockschaltbild des zu untersuchenden IIR Systems ($h_1 = 0.82, h_2 = -0.03$) \cite{aufgabenstellung}.}
 	\label{fig:IIR_System}
 \end{figure}
 
@@ -251,15 +251,15 @@ Das Adaptionsverhalten der Filterkoeffizienten ist wird durch die höhere Varian
 
 \subsection{Einfluss des Schrittweite \boldmath{$\mu$} und des Vergessensfaktors \boldmath{$\rho$}}
 
-Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS respektive des KLS Algorithmus sind und nicht Eigenschaften des Signals, sind die Einflüsse dieser Parameter identisch zu deren Beschreibung in \ref{sec:FIR_mu} und \ref{sec:FIR_rho}.
+Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS respektive des RLS Algorithmus sind und nicht Eigenschaften des Signals, sind die Einflüsse dieser Parameter identisch zu deren Beschreibung in \ref{sec:FIR_mu} und \ref{sec:FIR_rho}.
 
 
 \subsection{Wahl des Lernalgorithmus}
 
 Die korrekten Werte der Koeffizienten konnte weder mit dem LMS noch dem RLS mit verschiedenen Parametern hinreichend genau approximiert werden.
-Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und KLS Algorithmus perfekt nachzubilden.
+Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und RLS Algorithmus perfekt nachzubilden.
 Dies wurde in Abschnitt \ref{sec:iir} approximiert.
-Bei einem IIR System ist dies jedoch nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und KLS Algorithmen nicht abgebildet wird.
+Bei einem IIR System ist dies jedoch nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und RLS Algorithmen nicht abgebildet wird.
 Auf Grundlage dessen ist mit den beiden Algorithmen nur eine Approximation des IIR Systems möglich.
 Dies erklärt auch warum die exakten Filtergewichte aus \ref{figIIR_System} selbst bei einem hohen Wert für $N$ nicht erreicht wurden.
 Bei der Robustheit gegenüber Rauschen erweist sich der RLS gegenüber dem LMS erneut als robuster.
