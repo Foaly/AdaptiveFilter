@@ -3,21 +3,21 @@
 
 Die vorliegende Aufgabe dreht sich um die Systemidentifikation zweier System.
 Dafür wurden in der Aufgabenstellung jeweils ein FIR und ein IIR Filter gegeben.
-Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollte die Koeffizienten der gegebenen System identifiziert werden.
+Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollten die Koeffizienten der gegebenen System identifiziert werden.
 Als Vorbereitung auf die Systemidentifikation wurden der Least-Mean-Square Algorithmus (LMS) und der Recursive-Least-Squares Algorithmus mit Vergessenfaktor (RLS) implementiert.
-Die Implementation erfolgte in Python \footnote{Software Repository: \url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S.145).
+Die Implementation erfolgte in Python\footnote{Software Repository: \url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S.85 und RLS nach S.145).
 
 \section{FIR-Filter}
 \label{sec:fir}
 
 Die erste Aufgabe ist die Systemidentifikation eines FIR Filters mit 5 Koeffizienten.
-Das System wird mit Hilfe der LMS und KLS (mit Vergessensfaktor) Algorithmen identifiziert.
+Das System wird mit Hilfe der LMS und RLS (mit Vergessensfaktor) Algorithmen identifiziert.
 Der Einfluss unterschiedlicher Parameter, wie die Anzahl der Filterkoeffizienten, die Varianz des hinzugefügten Rauschens und die Werte für Schrittweite oder Vergessensfaktor auf das Ergebnis wird dabei untersucht.
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.9\textwidth]{figures/FIR_System.png}
- \caption{Blockschaltbild des zu untersuchenden FIR Systems ($h_0 = 0.7, h_1 = 0.1, h_2 = -0.03, h_3 = 0.18, h_4 = -0.24$).}
+ \caption{Blockschaltbild des zu untersuchenden FIR Systems (${h_0 = 0.7,}$ ${h_1 = 0.1,}$ ${h_2 = -0.03,}$ ${h_3 = 0.18,}$ ${h_4 = -0.24}$) \cite{aufgabenstellung}.}
 	\label{fig:FIR_System}
 \end{figure}
 
