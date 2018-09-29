@@ -68,6 +68,8 @@ Die Legende in Abbildung \ref{fig:N5} zeigt deutlich, dass beide Algorithmen mit
 \end{figure}
 
 \subsection{Einfluss der Rauschvarianz}
+\label{sec:FIR_sigma}
+
 In der Messstrecke des Systems wird ein AWGN (Additive White Gaussian Noise bzw. Additives Weißes Gausverteiltes Rauschen) hinzugefügt.
 Dies ist als $n[k]$ in der schematischen Darstellung A.2 in \cite{moschytz2000book} (S. 211) der Messstrecke gekennzeichnet. 
 Dadurch lässt sich Testen, welche Algorithmus stabiler und weniger anfällig gegenüber Rauschen ist und sich besser für eine schlechte Übertragungsstrecke einsetzen lässt.
@@ -173,30 +175,97 @@ generell:
 
 
 
-\files{main.py}
+
+
 
 
 \section{IIR-Filter}
 \label{sec:iir}
 
 Das zweite System das untersucht werden soll ist ein IIR Filter.
-
-Hierbei ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und KLS Algorithmus perfekt nachzubilden.
-Bei einem IIR System ist dies nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und KLS Algorithmen nicht abgebildet wird.
-Auf Grundlage dessen ist nur ein 
+Bei der Systemidentifikation wird hier analog zu Abschnitt \ref{sec:fir} vorgegangen und die Ergebnisse des LMS und RLS Algorithmus unter Einfluss unterschiedlicher Parameter untersucht.
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.5\textwidth]{figures/IIR_System.png}
  \caption{Blockschaltbild des zu untersuchenden IIR Systems ($h_1 = 0.82, h_2 = -0.03$).}
-	\label{fig:FIR_System}
+	\label{fig:IIR_System}
 \end{figure}
 
 
 
 \subsection{Anzahl an Filterkoeffizienten}
-\subsection{Wahl des Lernalgorithmus}
+
+Ähnlich zur Untersuchung des FIR Filters wurde eine unterschiedliche Anzahl an Filterkoeffizienten verwendet und seine Auswirkung auf das Verhalten der Algorithmen überprüft ($N \in \{1, 2, 5\}$).
+Anders als beim FIR Filter fällt beim Betrachten der Legenden der Filterkoeffizientenverläufe auf, dass die idealen Filterkoeffizienten bei der korrekten Anzahl ($N = 2$) nicht bestimmt werden konnten.
+Selbst eine höhere Anzahl an Filterkoeffizienten (siehe Abb. \ref{fig:iir_N5}) führt nicht dazu das die Filterkoeffizienten auf die korrekten Werte konvergieren.
+Es ist in Abbildungen \ref{fig:iir_N1} bis \ref{fig:iir_N5} jedoch zu beobachten, dass der quadratische Fehler mit einer steigenden Anzahl an Filterkoeffizienten zunehmen kleiner wird.
+Während in Abbildung \ref{fig:iir_N1} der Wert bei $MSE \approx 1.9$ liegt, so ist der Wert bei $N = 5$ in Abbildung \ref{fig:iir_N5} auf ca. $0.25$ gesunken.
+
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/IIR/N_1_var_0.001}}}
+ \caption{Vergleich zwischen LMS und RLS mit je einem Filterkoeffizienten (N=1)}
+	\label{fig:iir_N1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/IIR/N_2_var_0.001}}}
+ \caption{Vergleich zwischen LMS und RLS mit je zwei Filterkoeffizienten (N=2)}
+	\label{fig:iir_N2}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/IIR/N_5_var_0.001}}}
+ \caption{Vergleich zwischen LMS und RLS mit je fünf Filterkoeffizienten (N=5)}
+	\label{fig:iir_N5}
+\end{figure}
+
+
+
+
 \subsection{Einfluss der Varianz}
+
+Beim Betrachten des Einflusses der Varianz des hinzugefügten AWGN zeigen sich deutliche Parallelen zu den Ergebnissen aus Abschnitt \ref{sec:FIR_sigma}.
+Auch hier bedeutet eine Zunahme der Varianz des hinzugefügten Rauschens eine Zunahme des quadratischen Fehlers.
+Vergleicht man die Abbildung \ref{fig:sig1} mit \ref{fig:IIR_sig1} und \ref{fig:sig10} mit \ref{fig:IIR_sig10} so sieht man das der Fehler beim Untersuchen des IIR Filters leicht über den Werten für den Fehler des FIR Filters liegt.
+Das Adaptionsverhalten der Filterkoeffizienten ist wird durch die höhere Varianz des Rauschen ebenfalls beeinflusst und führt zu einem unruhigeren Verlauf der Koeffizienten.
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/IIR/N_5_var_1.0}}}
+ \caption{Vergleich zwischen LMS und RLS bei einem AWGN von $\sigma^2 = 1$  (N=5)}
+	\label{fig:IIR_sig1}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/IIR/N_5_var_10.0}}}
+ \caption{Vergleich zwischen LMS und RLS bei einem AWGN von $\sigma^2 = 10$  (N=5)}
+	\label{fig:IIR_sig10}
+\end{figure}
+
+
+\subsection{Einfluss des Schrittweite \boldmath{$\mu$} und des Vergessensfaktors \boldmath{$\rho$}}
+
+Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS respektive des KLS Algorithmus sind und nicht Eigenschaften des Signals, sind die Einflüsse dieser Parameter identisch zu deren Beschreibung in \ref{sec:FIR_mu} und \ref{sec:FIR_rho}.
+
+
+\subsection{Wahl des Lernalgorithmus}
+
+Die korrekten Werte der Koeffizienten konnte weder mit dem LMS noch dem RLS mit verschiedenen Parametern hinreichend genau approximiert werden.
+Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und KLS Algorithmus perfekt nachzubilden.
+Dies wurde in Abschnitt \ref{sec:iir} approximiert.
+Bei einem IIR System ist dies jedoch nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und KLS Algorithmen nicht abgebildet wird.
+Auf Grundlage dessen ist mit den beiden Algorithmen nur eine Approximation des IIR Systems möglich.
+Dies erklärt auch warum die exakten Filtergewichte aus \ref{figIIR_System} selbst bei einem hohen Wert für $N$ nicht erreicht wurden.
+Bei der Robustheit gegenüber Rauschen erweist sich der RLS gegenüber dem LMS erneut als robuster.
+
+
+
 
 
 \section{Systemwechsel}
