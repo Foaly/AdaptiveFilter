@@ -191,8 +191,8 @@ def addNoise(x, variance):
 
 # Script
 
-μ = 0.1
-rho = 0.9
+μ = 0.01
+rho = 0.99
 np.random.seed(42)
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
@@ -200,16 +200,16 @@ mat_IIR = scipy.io.loadmat('System_IIR25')
 mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
 mat_IIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_IIR25')
 
-# x = mat_FIR["X"][0]
+x = mat_FIR["X"][0]
 # x = mat_IIR["X"][0]
 # x = mat_FIR_Systemwechsel["X"][0]
-x = mat_IIR_Systemwechsel["X"][0]
+# x = mat_IIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
-# d_ = mat_FIR["D_"][0]
+d_ = mat_FIR["D_"][0]
 # d_ = mat_IIR["D_"][0]
 # d_ = mat_FIR_Systemwechsel["D_"][0]
-d_ = mat_IIR_Systemwechsel["D_"][0]
+# d_ = mat_IIR_Systemwechsel["D_"][0]
 
 
 mat_training = scipy.io.loadmat('Training')
@@ -219,11 +219,11 @@ mat_test = scipy.io.loadmat('Test')
 test_data = mat_test['x_test'].flatten()
 
 
-for variance in [0.001]:#, 0.1, 1.0, 10.0]:
-    for N in [5]:
+for variance in [0.001, 0.1, 1.0, 10.0]:
+    for N in [1, 2, 5]:
         d = addNoise(d_, variance)
 
-        end = 10000
+        end = 2000
 
         w1, e1, y1 = lms(x, d, N, μ)
         w2, e2, y2 = rls(x, d, N, rho)
@@ -273,9 +273,9 @@ for variance in [0.001]:#, 0.1, 1.0, 10.0]:
         axarr[1][1].set_ylabel("Koeffizienten")
         axarr[1][1].set_xlim([-10, end])
 
-        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
+        plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
         # plt.savefig("N_" + str(N) + "_var_" + str(variance) + "_mu_" + str(μ) + ".pdf", bbox_inches='tight')
-        plt.savefig("mu_" + str(μ) + "_rho_" + str(rho) + ".pdf", bbox_inches='tight')
+        # plt.savefig("mu_" + str(μ) + "_rho_" + str(rho) + ".pdf", bbox_inches='tight')
         plt.show()
 
 
