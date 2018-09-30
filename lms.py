@@ -192,20 +192,23 @@ def addNoise(x, variance):
 # Script
 
 μ = 0.01
-rho = 0.99
+rho = 0.9
 
-# mat_FIR = scipy.io.loadmat('System_FIR25')
+mat_FIR = scipy.io.loadmat('System_FIR25')
 mat_IIR = scipy.io.loadmat('System_IIR25')
-# mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
+mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
+mat_IIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_IIR25')
 
 # x = mat_FIR["X"][0]
-x = mat_IIR["X"][0]
-# x = mat_FIR_Systemwechsel["X"][0]
+# x = mat_IIR["X"][0]
+x = mat_FIR_Systemwechsel["X"][0]
+# x = mat_IIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
 # d_ = mat_FIR["D_"][0]
-d_ = mat_IIR["D_"][0]
-# d_ = mat_FIR_Systemwechsel["D_"][0]
+# d_ = mat_IIR["D_"][0]
+d_ = mat_FIR_Systemwechsel["D_"][0]
+# d_ = mat_IIR_Systemwechsel["D_"][0]
 
 
 mat_training = scipy.io.loadmat('Training')
@@ -217,61 +220,64 @@ test_data = mat_test['x_test'].flatten()
 
 
 
-# for variance in [0.001, 0.1, 1.0, 10.0]:
-#     for N in [1, 2, 5]:
-#         d = addNoise(d_, variance)
-#
-#         end = 2000
-#
-#         w1, e1, y1 = lms(x, d, N, μ)
-#         w2, e2, y2 = rls(x, d, N, rho)
-#
-#         avg_e1 = np.average(e1)
-#         avg_e2 = np.average(e2)
-#
-#         f, axarr = plt.subplots(2, 2, figsize=(12, 5))
-#         f.tight_layout()
-#         plt.subplots_adjust(hspace=0.5, wspace=0.2)
-#
-#         e1 = smoother(e1, 30)
-#         axarr[0][0].plot(e1[:end], 'b', linewidth=1)
-#         axarr[0][0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
-#         axarr[0][0].set_title('LMS (Squared Error)')
-#         axarr[0][0].set_xlabel("Samples")
-#         axarr[0][0].set_ylabel("Squared Error")
-#         axarr[0][0].grid(True)
-#         axarr[0][0].set_xlim([-1, end])
-#
-#         coeffCount = w1.shape[0]
-#         for coeff in range(0, coeffCount):
-#             axarr[0][1].plot(w1[coeff][:end], linewidth=1)
-#         legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
-#         axarr[0][1].legend(legend, loc='right', title="Final Weights")
-#         axarr[0][1].set_title('LMS (Filterkoeffizienten)')
-#         axarr[0][1].set_xlabel("Samples")
-#         axarr[0][1].set_ylabel("Koeffizienten")
-#
-#         e2 = smoother(e2, 30)
-#         axarr[1][0].plot(e2[:end], 'b', linewidth=1)
-#         axarr[1][0].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
-#         axarr[1][0].set_title('RLS (Squared Error)')
-#         axarr[1][0].set_xlabel("Samples")
-#         axarr[1][0].set_ylabel("Squared Error")
-#         axarr[1][0].grid(True)
-#         axarr[1][0].set_xlim([-1, end])
-#
-#         coeffCount = w2.shape[0]
-#         for coeff in range(0, coeffCount):
-#             axarr[1][1].plot(w2[coeff][:end], linewidth=1)
-#         legend = ['w' + str(i+1) + ' = ' + str(np.around(w2[i, -1], 3)) for i in range(0, coeffCount)]
-#         axarr[1][1].legend(legend, loc='right', title="Final Weights")
-#         axarr[1][1].set_title('RLS (Filterkoeffizienten)')
-#         axarr[1][1].set_xlabel("Samples")
-#         axarr[1][1].set_ylabel("Koeffizienten")
-#
-#         plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
-#         # plt.savefig("N_" + str(N) + "_var_" + str(variance) + "_mu_" + str(μ) + ".pdf", bbox_inches='tight')
-#         plt.show()
+for variance in [0.001]:#, 0.1, 1.0, 10.0]:
+    for N in [5]:
+        d = addNoise(d_, variance)
+
+        end = 10000
+
+        w1, e1, y1 = lms(x, d, N, μ)
+        w2, e2, y2 = rls(x, d, N, rho)
+
+        avg_e1 = np.average(e1)
+        avg_e2 = np.average(e2)
+
+        f, axarr = plt.subplots(2, 2, figsize=(12, 5))
+        f.tight_layout()
+        plt.subplots_adjust(hspace=0.5, wspace=0.2)
+
+        e1 = smoother(e1, 30)
+        axarr[0][0].plot(e1[:end], 'b', linewidth=1)
+        axarr[0][0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
+        axarr[0][0].set_title('LMS (Squared Error)')
+        axarr[0][0].set_xlabel("Samples")
+        axarr[0][0].set_ylabel("Squared Error")
+        axarr[0][0].grid(True)
+        axarr[0][0].set_xlim([-1, end])
+
+        coeffCount = w1.shape[0]
+        for coeff in range(0, coeffCount):
+            axarr[0][1].plot(w1[coeff][:end], linewidth=1)
+        legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
+        axarr[0][1].legend(legend, loc='right', title="Final Weights")
+        axarr[0][1].set_title('LMS (Filterkoeffizienten)')
+        axarr[0][1].set_xlabel("Samples")
+        axarr[0][1].set_ylabel("Koeffizienten")
+        axarr[0][1].set_xlim([-10, end])
+
+        e2 = smoother(e2, 30)
+        axarr[1][0].plot(e2[:end], 'b', linewidth=1)
+        axarr[1][0].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
+        axarr[1][0].set_title('RLS (Squared Error)')
+        axarr[1][0].set_xlabel("Samples")
+        axarr[1][0].set_ylabel("Squared Error")
+        axarr[1][0].grid(True)
+        axarr[1][0].set_xlim([-1, end])
+
+        coeffCount = w2.shape[0]
+        for coeff in range(0, coeffCount):
+            axarr[1][1].plot(w2[coeff][:end], linewidth=1)
+        legend = ['w' + str(i+1) + ' = ' + str(np.around(w2[i, -1], 3)) for i in range(0, coeffCount)]
+        axarr[1][1].legend(legend, loc='right', title="Final Weights")
+        axarr[1][1].set_title('RLS (Filterkoeffizienten)')
+        axarr[1][1].set_xlabel("Samples")
+        axarr[1][1].set_ylabel("Koeffizienten")
+        axarr[1][1].set_xlim([-10, end])
+
+        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
+        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + "_mu_" + str(μ) + ".pdf", bbox_inches='tight')
+        plt.savefig("mu_" + str(μ) + "_rho_" + str(rho) + ".pdf", bbox_inches='tight')
+        plt.show()
 
 
 # Plots
@@ -299,73 +305,73 @@ test_data = mat_test['x_test'].flatten()
 #     plt.show()
 
 
-for [M, mu, sigma] in [[5, 0.5, 1.0], [10, 0.5, 1.0]]:
-    prefix = 'KLMS_' + str(M) + '_' + str(mu) + '_' + str(sigma)
-    trainErrorName = prefix + '_train_error'
-    trainPredictionName = prefix + '_train_prediction'
-    testErrorName = prefix + '_test_error'
-    testPredictionName = prefix + '_test_prediction'
-    kernelWeigthName = prefix + '_kernel_weights'
-
-    # klms
-    # kernel = klmsHelper(mu, sigma)
-    # klmsTrain(kernel, train_data, M)
-    #
-    # trainErrors = kernel.errors.copy()
-    # trainPrediction = kernel.prediction.copy()
-    #
-    # # warning: long computation time
-    # klmsPredict(kernel, test_data, M)
-    #
-    # testErrors = kernel.errors
-    # testPrediction = kernel.prediction
-    # kernelWeights = kernel.weights
-    #
-    # np.savetxt(trainErrorName + '.txt', trainErrors)
-    # np.savetxt(trainPredictionName + '.txt', trainPrediction)
-    # np.savetxt(testErrorName + '.txt', testErrors)
-    # np.savetxt(testPredictionName + '.txt', testPrediction)
-    # np.savetxt(kernelWeigthName + '.txt', kernel.weights)
-
-    trainErrors = np.loadtxt(trainErrorName + '.txt')
-    trainPrediction = np.loadtxt(trainPredictionName + '.txt')
-    testErrors = np.loadtxt(testErrorName + '.txt')
-    testPrediction = np.loadtxt(testPredictionName + '.txt')
-    kernelWeights = np.loadtxt(kernelWeigthName + '.txt')
-
-    # plotting
-    N = len(trainPrediction);
-    M2 = M - 1
-
-    for i in range(M2):
-        trainErrors[i] = 0
-        testErrors[i] = 0
-
-    plt.figure(figsize=(12, 5))
-    plt.tight_layout()
-    plt.subplot(211)
-    plt.title('KLMS (N: ' + str(M) + ', μ: ' + str(mu) + ', σ²: ' + str(sigma) + ')')
-
-    plt.plot(train_data[M:], 'k--')
-    plt.plot(trainPrediction, 'r')
-
-    plt.plot(test_data[M:], 'k-.')
-    plt.plot(testPrediction, 'b')
-    plt.xlim([M2, N])
-    plt.legend(['Train data', 'Training', 'Test data', 'Testing'])
-    #plt.xlabel("Samples")
-    plt.ylabel("Amplitude")
-
-    plt.subplot(212)
-    plt.plot(trainErrors[:], 'r')
-    plt.plot(testErrors[:N], 'b')
-    plt.xlim([M2, N])
-    plt.legend(['Train', 'Test'])
-    plt.xlabel("Samples")
-    plt.ylabel("MSE")
-
-    plt.savefig(kernelWeigthName + ".pdf", bbox_inches='tight')
-    plt.show()
-
-    plt.figure()
-    plt.plot(kernelWeights)
+# for [M, mu, sigma] in [[5, 0.5, 1.0], [10, 0.5, 1.0]]:
+#     prefix = 'KLMS_' + str(M) + '_' + str(mu) + '_' + str(sigma)
+#     trainErrorName = prefix + '_train_error'
+#     trainPredictionName = prefix + '_train_prediction'
+#     testErrorName = prefix + '_test_error'
+#     testPredictionName = prefix + '_test_prediction'
+#     kernelWeigthName = prefix + '_kernel_weights'
+#
+#     # klms
+#     # kernel = klmsHelper(mu, sigma)
+#     # klmsTrain(kernel, train_data, M)
+#     #
+#     # trainErrors = kernel.errors.copy()
+#     # trainPrediction = kernel.prediction.copy()
+#     #
+#     # # warning: long computation time
+#     # klmsPredict(kernel, test_data, M)
+#     #
+#     # testErrors = kernel.errors
+#     # testPrediction = kernel.prediction
+#     # kernelWeights = kernel.weights
+#     #
+#     # np.savetxt(trainErrorName + '.txt', trainErrors)
+#     # np.savetxt(trainPredictionName + '.txt', trainPrediction)
+#     # np.savetxt(testErrorName + '.txt', testErrors)
+#     # np.savetxt(testPredictionName + '.txt', testPrediction)
+#     # np.savetxt(kernelWeigthName + '.txt', kernel.weights)
+#
+#     trainErrors = np.loadtxt(trainErrorName + '.txt')
+#     trainPrediction = np.loadtxt(trainPredictionName + '.txt')
+#     testErrors = np.loadtxt(testErrorName + '.txt')
+#     testPrediction = np.loadtxt(testPredictionName + '.txt')
+#     kernelWeights = np.loadtxt(kernelWeigthName + '.txt')
+#
+#     # plotting
+#     N = len(trainPrediction);
+#     M2 = M - 1
+#
+#     for i in range(M2):
+#         trainErrors[i] = 0
+#         testErrors[i] = 0
+#
+#     plt.figure(figsize=(12, 5))
+#     plt.tight_layout()
+#     plt.subplot(211)
+#     plt.title('KLMS (N: ' + str(M) + ', μ: ' + str(mu) + ', σ²: ' + str(sigma) + ')')
+#
+#     plt.plot(train_data[M:], 'k--')
+#     plt.plot(trainPrediction, 'r')
+#
+#     plt.plot(test_data[M:], 'k-.')
+#     plt.plot(testPrediction, 'b')
+#     plt.xlim([M2, N])
+#     plt.legend(['Train data', 'Training', 'Test data', 'Testing'])
+#     #plt.xlabel("Samples")
+#     plt.ylabel("Amplitude")
+#
+#     plt.subplot(212)
+#     plt.plot(trainErrors[:], 'r')
+#     plt.plot(testErrors[:N], 'b')
+#     plt.xlim([M2, N])
+#     plt.legend(['Train', 'Test'])
+#     plt.xlabel("Samples")
+#     plt.ylabel("MSE")
+#
+#     plt.savefig(kernelWeigthName + ".pdf", bbox_inches='tight')
+#     plt.show()
+#
+#     plt.figure()
+#     plt.plot(kernelWeights)

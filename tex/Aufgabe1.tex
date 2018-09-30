@@ -7,7 +7,7 @@ Die vorliegende Arbeit widmet sich dem Thema der Systemidentifikation mit Hilfe 
   \centering
   \includegraphics[width=0.5\textwidth]{figures/systemidentifikation.png}
   \caption{Prinzip der Systemidentifikation durch ein adaptives FIR Filter \cite{moschytz2000book}.}
-  \label{fig:IIR_System}
+  \label{fig:Systemidentifikation}
 \end{figure}
 
 In der Aufgabenstellung \cite{aufgabenstellung} wurden zwei Filtersysteme vorgestellt, ein FIR und ein IIR Filter.
@@ -82,7 +82,7 @@ Die Legende in Abbildung \ref{fig:N5} zeigt deutlich, dass beide Algorithmen mit
 \label{sec:FIR_sigma}
 
 In der Messstrecke des Systems wird ein AWGN (Additive White Gaussian Noise bzw. Additives Weißes Gausverteiltes Rauschen) hinzugefügt.
-Dies ist als $n[k]$ in der schematischen Darstellung A.2 in \cite{moschytz2000book} (S. 211) der Messstrecke gekennzeichnet. 
+Dies ist als $n[k]$ in der schematischen Darstellung \ref{fig:Systemidentifikation} der Messstrecke gekennzeichnet. 
 Dadurch lässt sich Testen, welche Algorithmus stabiler und weniger anfällig gegenüber Rauschen ist und sich besser für eine schlechte Übertragungsstrecke einsetzen lässt.
 Für die Varianz des Rauschens $\sigma^2$ wurden verschiedene Werte angenommen ($\sigma^2 \in \{0.001, 0.1, 1, 10\}$) und ihr Einfluss auf das Fehlerverhalten der adaptiven Algorithmen untersucht.
 Wenig überraschend bedeutet eine Zunahme der Varianz des Rauschen ebenfalls eine Zunahme im quadratischen Fehler und im Adaptionsverhalten der Filterkoeffizienten.
@@ -294,9 +294,77 @@ Der RLS ist erneut leicht robuster gegenüber hinzugefügtem Rauschen verglichen
 \section{Systemwechsel}
 \label{sec:Systemwechsel}
 
+Nun soll untersucht werden, wie gut die Algorithmen mit einem plötzlichen Systemwechsel umgehen könne. 
+Dazu werden die gleichen Signal wie schon in Abschnitt \ref{sec:fir} und \ref{sec:iir} verwendet.
+Nach 5000 Iterationen werden die Filterkoeffizienten des Systems geändert.
+Es wird wie schon oben jeweils ein FIR und IIR System untersucht.
+Da viele der Auswirkungen der verschiedenen Parametereinstellungen auf die Algorithmen in den vorhergehenden Abschnitten ausführlich behandelt wurde, werden in diesem Abschnitt nur die Einstellungen hervorgehoben, die das Adaptionsverhalten bei einem Systemwechsel besonders beeinflussen.
+Besonderes Augenmerk wird dabei auf die Schrittweite $\mu$ und den Vergessensfaktor $\rho$ gelegt.
+
+
+\subsection{Systemwechsel FIR System}
+
+Zunächst betrachten wir den Systemwechsel im FIR System unter Benutzung der bisherigen Standartparameter ( $N = 5$, $\sigma^2 = 0.001$, $\mu = 0.01$, $\rho = 0.99$).
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR_Systemwechsel/mu_0.01_rho_0.99}}}
+ \caption{Systemwechsel im FIR System mit den bisherigen Standartparametern.}
+	\label{fig:SW_FIR_1}
+\end{figure}
+
+Bei Betrachtung der Grafik \ref{fig:SW_FIR_1} ist der Systemwechsel nach 5000 Iterationen deutlich durch den sprunghaften Anstieg des quadratischen Fehlers und das Umschwenken der Filterkoeffizienten an dieser Stelle zu erkennen.
+Es fällt auf das der quadratische Fehler des LMS kleiner ist als der des RLS und nach dem Systemwechsel deutlich schneller sinkt.
+Der RLS kann sich wesentlich schlechter auf die neuen Werte des veränderten Systems einstellen. 
+Dies wird besonders in den Plots der Koeffizientenverläufe sichtbar.
+Während die Koeffizienten des LMS relativ sprunghaft nach dem Systemwechsel auf die neuen Koeffizienten konvergieren, so beschreiben die Filterkoeffizient des RLS ein deutlich längere nahezu exponentielle Kurve, bevor sie auf die neuen Filterwerte konvergieren.
+Dies liegt an der Tatsache, dass der RLS Algorithmus mehr vergangene Werte in die Berechnung der Filterkoeffizienten mit einbezieht als der LMS.
+
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR_Systemwechsel/mu_0.01_rho_0.9}}}
+ \caption{Systemwechsel im FIR System mit einem Vergessenfaktor von $\rho = 0.9$.}
+	\label{fig:SW_FIR_2}
+\end{figure}
+
+
+Durch die Anpassung des Vergesensfaktors lässt sich das "`Gedächnis"' des KLS beeinflussen und einstellen wie stark die bisherigen Werte in der Berechnung gewichtet werden.
+In Abbildung \ref{fig:SW_FIR_2} wurde der Vergessensfakor $\rho$ auf $0.9$ gesetzt.
+Der quadratische Fehler des RLS sinkt dadurch erheblich schneller als zuvor und bleibt sogar unter dem Wert des LMS.
+Auch die Filterkoeffizienten des RLS passen sich nun ähnlich schnell an wie die des LMS.
+Es ist allerdings zu beobachten, dass die Filterkoeffizienten leicht oszillieren und nicht so sauber auf die korrekten Koeffizienten des Systems konvergieren.
+Wird der Vergessensfaktor $\rho$ noch kleiner gesetzt, so verstärkt sich dieser Effekt weiter.
+
+Gleiches gilt für die Schrittweite $\mu$ des LMS.
+Wird diese auf einen höheren Wert gesetzt (z.B.: $0.2$) so verringert sich ebenfalls die Konvergenzzeit, jedoch wird das "`Rauschen"' im Verlauf der Filterkoeffizienten stärker und die Werte konvergieren nicht mehr auf die optimalen Ergebnisse.
+Durch ein geschicktes Wählen der Schrittweite und des Vergessensfaktors lassen sich mit beiden Algorithmen annährend identische Ergebnisse erreichen.
+Die ist im Abbildung \ref{fig:SW_FIR_3} zu sehen.
+Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho = 0.9$ gewählt.
+
+
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/FIR_Systemwechsel/mu_0.03_rho_0.9}}}
+ \caption{Systemwechsel im FIR System mit einem Vergessenfaktor von $\rho = 0.9$ und einer Schrittweite von $\mu = 0.03$.}
+	\label{fig:SW_FIR_3}
+\end{figure}
+
+
+
+\subsection{Systemwechsel IIR System}
+
+
+
+
+
+\subsection{Ergebnis}
+
 - weil LMS nur N werte in die Vergangenheit guckt ist er gut für veränderlich signale
 - KLS was Vorteil war (Einbeziehen aller bisherigen Werte) ist nun Nachteil
 - Vergessenfaktor too the rescue!
+- sagen welches verfahren unter den Bedingungen am besten ist
+- tradeoff zwischen flattern und schnelligkeit des konvergiernes
 
 
 \subsection{Adaptionsverhalten}
