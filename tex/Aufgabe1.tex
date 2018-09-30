@@ -1,8 +1,16 @@
 \section{Einführung}
 \label{sec:intor}
 
-Die vorliegende Aufgabe dreht sich um die Systemidentifikation mit Hilfe adaptiver Filter.
-Dafür wurden in der Aufgabenstellung jeweils ein FIR und ein IIR Filter gegeben.
+Die vorliegende Arbeit widmet sich dem Thema der Systemidentifikation mit Hilfe adaptiver Filter.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{figures/systemidentifikation.png}
+  \caption{Prinzip der Systemidentifikation durch ein adaptives FIR Filter \cite{moschytz2000book}.}
+  \label{fig:IIR_System}
+\end{figure}
+
+In der Aufgabenstellung \cite{aufgabenstellung} wurden zwei Filtersysteme vorgestellt, ein FIR und ein IIR Filter.
 Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollen die Koeffizienten der gegebenen Systeme identifiziert werden.
 Außerdem werden die Auswirkungen eines Systemwechsels auf die Algorithmen untersucht.
 Als Vorbereitung auf die Systemidentifikation wurden der Least-Mean-Square Algorithmus (LMS) und der Recursive-Least-Squares Algorithmus mit Vergessenfaktor (RLS) implementiert.
