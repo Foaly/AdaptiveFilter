@@ -193,6 +193,7 @@ def addNoise(x, variance):
 
 μ = 0.1
 rho = 0.9
+np.random.seed(42)
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
 mat_IIR = scipy.io.loadmat('System_IIR25')
@@ -216,8 +217,6 @@ train_data = mat_training['x_training'].flatten()
 
 mat_test = scipy.io.loadmat('Test')
 test_data = mat_test['x_test'].flatten()
-
-
 
 
 for variance in [0.001]:#, 0.1, 1.0, 10.0]:
