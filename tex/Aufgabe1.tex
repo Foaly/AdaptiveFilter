@@ -380,7 +380,7 @@ Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho
 In diesem Abschnitt wird ein dritter Algorithmus, der Kernel Least Mean Squares (KLMS), zur identifiaktion der unbekannten Systeme angewendet.
 Er nimmt eine Zeitreihenschätzung vor und approximiert die Filterkoeffizienten des unbekannten Systems mit Hilfe eines Trainingsdatensatzes.
 Der in der Aufgabenstellung zur verfügung gestellte Trainingsdatensatz ($Training.mat$) umfasst 500 Werte.
-Die Performance der auf dem Trainingsdatensatz trainierten Filter wird schließlich mit Hilfe einer Testdatenreihe ($Test.mat$) mit 10000 Werten untersucht.
+Die Performance der auf dem Trainingsdatensatz trainierten Filter wird mit einer Testdatenreihe ($Test.mat$) von 10000 Werten untersucht.
 Anschließend sollen die trainierten Filter mit dem LMS verglichen werden.
 
 
@@ -409,16 +409,16 @@ Alternativ können auch andere Kernel gewählt werden (z.B. Laplace).
 
 Es fällt auf, dass die trainierten Filter im Trainingsdurchlauf einen kleineren Fehler aufweisen als im Testdurchlauf.
 Mit diesem Verhalten war zu rechenen, da sich die Systeme im Lernprozess systematisch anpassen.
-Die wahl der Parameter $\mu$ und $\sigma$ wurden über mehrere Iteration verfeinert.
-Dabei hatte die breite der Gauss-Kerne durch die Varianz $sigma$ einen ebensowitchtigen Einfluss wie die Schrittweite $\mu$.
-Schließlich wurden für $\mu = 0.5$ und $\sigma = 0.5$ gewählt, womit die Filter sich am besten angepasst haben.
+Die Wahl der Parameter $\mu$ und $\sigma$ wurde über mehrere Iterationen verfeinert.
+Dabei hatte die breite der Gauss-Kerne durch die Varianz $\sigma$ einen ebensowitchtigen Einfluss wie die Schrittweite $\mu$.
+Schließlich wurde sich für $\mu = 0.5$ und $\sigma = 0.5$ entschieden, womit die Filter ein gutes Adaptionsverhalten aufwiesen.
 Bei einer tiefgehenderen Untersuchung der Systeme könnte mit Hilfe einer Korssvallidierung versucht werden, die möglichst optimalen $\mu$ und $\sigma$ Parameter zu ermittlen.
 
 
 \subsection{Vergleich von KLMS und LMS}
 Es wurden LMS Systeme auf Grundlage der Trainingsdaten erstellt.
-Um einen Vergleich mit den trainierten KLMS Systemen vornehmen zu können wurden die Die Filtergewichtung und Filterkoeffizienten der Systeme eingefronen und im Testdurchlauf nicht weiter angepasst.
-Anschließend wurde die Vergleich beider Algorithmen auf dem Testdatensatz durchgeführt.
+Die Filtergewichtung und Filterkoeffizienten der Systeme wurden anschließend eingefroren und im darauffolgenden Testdurchlauf auf dem Testdatensatz nicht weiter angepasst.
+Dadurch konnte ein objektiver Vergleich zwischen den Algorithmen vorgenommen werden.
 
 
 
