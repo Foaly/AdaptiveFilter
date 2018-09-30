@@ -191,7 +191,7 @@ def addNoise(x, variance):
 
 # Script
 
-μ = 0.01
+μ = 0.1
 rho = 0.9
 
 mat_FIR = scipy.io.loadmat('System_FIR25')
@@ -201,14 +201,14 @@ mat_IIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_IIR25')
 
 # x = mat_FIR["X"][0]
 # x = mat_IIR["X"][0]
-x = mat_FIR_Systemwechsel["X"][0]
-# x = mat_IIR_Systemwechsel["X"][0]
+# x = mat_FIR_Systemwechsel["X"][0]
+x = mat_IIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
 # d_ = mat_FIR["D_"][0]
 # d_ = mat_IIR["D_"][0]
-d_ = mat_FIR_Systemwechsel["D_"][0]
-# d_ = mat_IIR_Systemwechsel["D_"][0]
+# d_ = mat_FIR_Systemwechsel["D_"][0]
+d_ = mat_IIR_Systemwechsel["D_"][0]
 
 
 mat_training = scipy.io.loadmat('Training')

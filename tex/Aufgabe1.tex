@@ -354,21 +354,31 @@ Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho
 
 \subsection{Systemwechsel IIR System}
 
+Der Systemwechsel beim IIR System wird mit den selben Werten wie die anderen Abbildungen aus Abschnitt \ref{sec:fir} untersucht ($N =5$, $\sigma^2 = 0.01$).
+Für die Parameter der Schrittweite und des Vergessensfaktors treffen auch die selben Erkenntnisse zu wie beim Systemwechsel des FIR Systems zu.
+Durch eine zu große Schrittweite über- bzw. unterschreitet der LMS die optimalen Filterkoeffizienten periodisch und findet so nie die optimalen Werte.
+Der Vergessensfaktor beeinflusst wie in den vorherigen Untersuchungen die Geschwindigkeit des Konvergierens und die Störanfälligkeit des RLS.
+Werden die Parameter auf $\mu = 0.03$ für die Schrittweite und auf $\rho = 0.9$ für den Vergessenfaktor gesetzt, so lass sich wieder annährend identische Ergebnisse für die beiden Algorithmen erzielen (siehe \ref{fig:SW_IIR_1}).
+Jedoch gilt auch hier, wie schon in Abschnitt \ref{sec:iir}, dass das IIR System mit den beiden verwendeten Algorithmen nicht perfekt nachgebildet werden kann, da sie im unterschied zum IIR System keinen rekursiven Anteil haben.
 
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.9\textwidth]{{{figures/IIR_Systemwechsel/mu_0.03_rho_0.9}}}
+ \caption{Systemwechsel im IIR System mit einem Vergessenfaktor von $\rho = 0.9$ und einer Schrittweite von $\mu = 0.03$.}
+	\label{fig:SW_IIR_1}
+\end{figure}
 
 
 
 \subsection{Ergebnis}
 
-- weil LMS nur N werte in die Vergangenheit guckt ist er gut für veränderlich signale
-- KLS was Vorteil war (Einbeziehen aller bisherigen Werte) ist nun Nachteil
-- Vergessenfaktor too the rescue!
-- sagen welches verfahren unter den Bedingungen am besten ist
-- tradeoff zwischen flattern und schnelligkeit des konvergiernes
-
-
-\subsection{Adaptionsverhalten}
-
+In seiner Grundeinstellung eignet sich der LMS Algorithmus besser um trotz eines Systemwechsels innerhalb einer sehr kurzen Adaptionszeit gute Ergebnisse für die Filterkoeffizienten zu liefern.
+Dies liegt an der Struktur des LMS, da er für seine Berechnung nur eine kleine Menge ($N$) an vergangenen Werte berücksichtigt.
+Dadurch kann er schneller auf ein sich veränderndes System reagieren.
+Während das Miteinbeziehen aller vorheriger Werte durch den RLS in den vorherigen Systemidentifikation von statischen System vorteilhaft war und zu einer extrem kurzen Konvergenzzeit geführt hat, wird diese Eigenschaft bei einem Systemwechsel zu einem Nachteil, weil der Algorithmus nicht schnell genug auf die Änderungen reagieren kann.
+Dies kann durch das richtige Einstellen des Vergessensfaktors behoben werden und dem RLS ebenfalls zu einer schnellen Konvergenzzeit nach dem Systemwechsel verhelfen.
+Wie aus den Plots \ref{fig:SW_FIR_3} und \ref{fig:SW_IIR_1} hervorgeht bedeutet dies, dass bei einer korrekten Wahl der jeweiligen Parameter keiner der beiden Algorithmen dem Anderen überlegen ist.
+Bei beiden Algorithmen ist zu berücksichtigen, dass die Einstellung des Vergessensfaktors bzw. der Schrittweite immer einen Trade-off zwischen der Konvergenzzeit und der Stabilität des Verlaufs der Koeffizienten darstellt.
 
 
 
@@ -377,19 +387,19 @@ Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho
 \section{Kernel Least Mean Squares Algorithmus}
 \label{sec:klms}
 
-In diesem Abschnitt wird ein dritter Algorithmus, der Kernel Least Mean Squares (KLMS), zur identifiaktion der unbekannten Systeme angewendet.
+In diesem Abschnitt wird ein dritter Algorithmus, der Kernel Least Mean Squares (KLMS) untersucht.
 Er nimmt eine Zeitreihenschätzung vor und approximiert die Filterkoeffizienten des unbekannten Systems mit Hilfe eines Trainingsdatensatzes.
-Der in der Aufgabenstellung zur verfügung gestellte Trainingsdatensatz ($Training.mat$) umfasst 500 Werte.
+Der in der Aufgabenstellung zur Verfügung gestellte Trainingsdatensatz ($Training.mat$) umfasst 500 Werte.
 Die Performance der auf dem Trainingsdatensatz trainierten Filter wird mit einer Testdatenreihe ($Test.mat$) von 10000 Werten untersucht.
-Anschließend sollen die trainierten Filter mit dem LMS verglichen werden.
+Anschließend sollen die trainierten Filter mit den Ergebnissen des LMS verglichen werden.
 
 
 \subsection{Filterentwurf}
 
-Zwei unterschiedliche Filter wurden trainiert, einmal mit 5 (siehe Abbilding \ref{fig:klms5}) und einmal 10 (siehe Abbilding \ref{fig:klms10}) Filterkoeffizienten.
+Zwei unterschiedliche Filter wurden trainiert, einmal mit 5 (siehe Abbildung \ref{fig:klms5}) und einmal 10 (siehe Abbildung \ref{fig:klms10}) Filterkoeffizienten.
 Die Parameter $\mu$ und $\sigma$ wurden frei gewählt.
 Die vorgestellten Ergebnisse der KLMS Filter wurden auf Basis eines Gauss-Kernels erstellt.
-Alternativ können auch andere Kernel gewählt werden (z.B. Laplace).
+Es ist auch möglich alternativ andere Kernel  zu wählen (z.B. Laplace-Kernel).
 
 
 \begin{figure}[H]
@@ -408,20 +418,17 @@ Alternativ können auch andere Kernel gewählt werden (z.B. Laplace).
 
 
 Es fällt auf, dass die trainierten Filter im Trainingsdurchlauf einen kleineren Fehler aufweisen als im Testdurchlauf.
-Mit diesem Verhalten war zu rechenen, da sich die Systeme im Lernprozess systematisch anpassen.
+Mit diesem Verhalten war zu rechnen, da sich die Systeme im Lernprozess systematisch anpassen.
 Die Wahl der Parameter $\mu$ und $\sigma$ wurde über mehrere Iterationen verfeinert.
-Dabei hatte die breite der Gauss-Kerne durch die Varianz $\sigma$ einen ebensowitchtigen Einfluss wie die Schrittweite $\mu$.
-Schließlich wurde sich für $\mu = 0.5$ und $\sigma = 0.5$ entschieden, womit die Filter ein gutes Adaptionsverhalten aufwiesen.
-Bei einer tiefgehenderen Untersuchung der Systeme könnte mit Hilfe einer Korssvallidierung versucht werden, die möglichst optimalen $\mu$ und $\sigma$ Parameter zu ermittlen.
+Dabei hatte die Breite der Gauss-Kerne durch die Varianz $\sigma$ einen ebenso wichtigen Einfluss wie die Schrittweite $\mu$.
+Schließlich wurde für $\mu = 0.5$ und $\sigma = 0.5$ gewählt, womit die Filter ein zufriedenstellendes Adaptionsverhalten aufwiesen.
+Bei einer tiefgehenderen Untersuchung der Systeme könnte mit Hilfe einer Crossvalidierung versucht werden, die optimalen $\mu$ und $\sigma$ Parameter zu ermitteln.
 
 
 \subsection{Vergleich von KLMS und LMS}
-Es wurden LMS Systeme auf Grundlage der Trainingsdaten erstellt.
-Die Filtergewichtung und Filterkoeffizienten der Systeme wurden anschließend eingefroren und im darauffolgenden Testdurchlauf auf dem Testdatensatz nicht weiter angepasst.
+Es wurden ein LMS System auf Grundlage der Trainingsdaten erstellt.
+Die Filtergewichtung der Systeme wurden anschließend eingefroren und im darauffolgenden Testdurchlauf auf dem Testdatensatz nicht weiter angepasst.
 Dadurch konnte ein objektiver Vergleich zwischen den Algorithmen vorgenommen werden.
 
 
 
-
-
-\section{Fehlerfunktion(en)}
