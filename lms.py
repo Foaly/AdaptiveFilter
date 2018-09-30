@@ -219,14 +219,14 @@ mat_test = scipy.io.loadmat('Test')
 test_data = mat_test['x_test'].flatten()
 
 
-for variance in [0.001, 0.1, 1.0, 10.0]:
-    for N in [1, 2, 5]:
+for variance in [0.001]: #, 0.1, 1.0, 10.0]:
+    for N in [2]:
         d = addNoise(d_, variance)
 
         end = 2000
 
-        w1, e1, y1 = lms(x, d, N, μ)
-        w2, e2, y2 = rls(x, d, N, rho)
+        w1, e1, y1 = rls(x, d, N, 0.5)
+        w2, e2, y2 = rls(x, d, N, 0.99)
 
         avg_e1 = np.average(e1)
         avg_e2 = np.average(e2)
@@ -238,7 +238,7 @@ for variance in [0.001, 0.1, 1.0, 10.0]:
         e1 = smoother(e1, 30)
         axarr[0][0].plot(e1[:end], 'b', linewidth=1)
         axarr[0][0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
-        axarr[0][0].set_title('LMS (Squared Error)')
+        axarr[0][0].set_title('RLS (ρ = 0.5)')
         axarr[0][0].set_xlabel("Samples")
         axarr[0][0].set_ylabel("Squared Error")
         axarr[0][0].grid(True)
@@ -249,7 +249,7 @@ for variance in [0.001, 0.1, 1.0, 10.0]:
             axarr[0][1].plot(w1[coeff][:end], linewidth=1)
         legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
         axarr[0][1].legend(legend, loc='right', title="Final Weights")
-        axarr[0][1].set_title('LMS (Filterkoeffizienten)')
+        axarr[0][1].set_title('RLS (Filterkoeffizienten)')
         axarr[0][1].set_xlabel("Samples")
         axarr[0][1].set_ylabel("Koeffizienten")
         axarr[0][1].set_xlim([-10, end])
@@ -257,7 +257,7 @@ for variance in [0.001, 0.1, 1.0, 10.0]:
         e2 = smoother(e2, 30)
         axarr[1][0].plot(e2[:end], 'b', linewidth=1)
         axarr[1][0].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
-        axarr[1][0].set_title('RLS (Squared Error)')
+        axarr[1][0].set_title('RLS (ρ = 0.99)')
         axarr[1][0].set_xlabel("Samples")
         axarr[1][0].set_ylabel("Squared Error")
         axarr[1][0].grid(True)
