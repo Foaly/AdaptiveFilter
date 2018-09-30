@@ -294,17 +294,17 @@ Der RLS ist erneut leicht robuster gegenüber hinzugefügtem Rauschen verglichen
 \section{Systemwechsel}
 \label{sec:Systemwechsel}
 
-Nun soll untersucht werden, wie gut die Algorithmen mit einem plötzlichen Systemwechsel umgehen könne. 
-Dazu werden die gleichen Signal wie schon in Abschnitt \ref{sec:fir} und \ref{sec:iir} verwendet.
+Nun soll untersucht werden, wie gut die Algorithmen mit einem plötzlichen Systemwechsel umgehen können.
+Dazu werden die gleichen Signale wie schon in Abschnitt \ref{sec:fir} und \ref{sec:iir} verwendet.
 Nach 5000 Iterationen werden die Filterkoeffizienten des Systems geändert.
 Es wird wie schon oben jeweils ein FIR und IIR System untersucht.
-Da viele der Auswirkungen der verschiedenen Parametereinstellungen auf die Algorithmen in den vorhergehenden Abschnitten ausführlich behandelt wurde, werden in diesem Abschnitt nur die Einstellungen hervorgehoben, die das Adaptionsverhalten bei einem Systemwechsel besonders beeinflussen.
+Da viele der Auswirkungen der verschiedenen Parametereinstellungen auf die Algorithmen in den vorhergehenden Abschnitten ausführlich behandelt wurden, werden in diesem Abschnitt nur die Einstellungen hervorgehoben, die das Adaptionsverhalten bei einem Systemwechsel besonders beeinflussen.
 Besonderes Augenmerk wird dabei auf die Schrittweite $\mu$ und den Vergessensfaktor $\rho$ gelegt.
 
 
 \subsection{Systemwechsel FIR System}
 
-Zunächst betrachten wir den Systemwechsel im FIR System unter Benutzung der bisherigen Standartparameter ( $N = 5$, $\sigma^2 = 0.001$, $\mu = 0.01$, $\rho = 0.99$).
+Zunächst betrachten wir den Systemwechsel im FIR System unter Benutzung der bisherigen Standardparameter ( $N = 5$, $\sigma^2 = 0.001$, $\mu = 0.01$, $\rho = 0.99$).
 
 \begin{figure}[H]
   \centering
@@ -318,7 +318,7 @@ Es fällt auf das der quadratische Fehler des LMS kleiner ist als der des RLS un
 Der RLS kann sich wesentlich schlechter auf die neuen Werte des veränderten Systems einstellen. 
 Dies wird besonders in den Plots der Koeffizientenverläufe sichtbar.
 Während die Koeffizienten des LMS relativ sprunghaft nach dem Systemwechsel auf die neuen Koeffizienten konvergieren, so beschreiben die Filterkoeffizient des RLS ein deutlich längere nahezu exponentielle Kurve, bevor sie auf die neuen Filterwerte konvergieren.
-Dies liegt an der Tatsache, dass der RLS Algorithmus mehr vergangene Werte in die Berechnung der Filterkoeffizienten mit einbezieht als der LMS.
+Dies liegt an der Tatsache, das der RLS Algorithmus mehr vergangene Werte in die Berechnung der Filterkoeffizienten mit einbezieht als der LMS.
 
 
 \begin{figure}[H]
@@ -338,15 +338,15 @@ Wird der Vergessensfaktor $\rho$ noch kleiner gesetzt, so verstärkt sich dieser
 
 Gleiches gilt für die Schrittweite $\mu$ des LMS.
 Wird diese auf einen höheren Wert gesetzt (z.B.: $0.2$) so verringert sich ebenfalls die Konvergenzzeit, jedoch wird das "`Rauschen"' im Verlauf der Filterkoeffizienten stärker und die Werte konvergieren nicht mehr auf die optimalen Ergebnisse.
-Durch ein geschicktes Wählen der Schrittweite und des Vergessensfaktors lassen sich mit beiden Algorithmen annährend identische Ergebnisse erreichen.
+Durch ein geschicktes Wählen der Schrittweite und des Vergessensfaktors lassen sich mit beiden Algorithmen annährend identische Ergebnisse erzielen.
 Die ist im Abbildung \ref{fig:SW_FIR_3} zu sehen.
-Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho = 0.9$ gewählt.
+Dort wurde eine Schrittweite von $\mu = 0.03$ und ein Vergessensfaktor von $\rho = 0.9$ gewählt.
 
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.9\textwidth]{{{figures/FIR_Systemwechsel/mu_0.03_rho_0.9}}}
- \caption{Systemwechsel im FIR System mit einem Vergessenfaktor von $\rho = 0.9$ und einer Schrittweite von $\mu = 0.03$.}
+ \caption{Systemwechsel im FIR System mit einem Vergessensfaktor von $\rho = 0.9$ und einer Schrittweite von $\mu = 0.03$.}
 	\label{fig:SW_FIR_3}
 \end{figure}
 
@@ -355,17 +355,17 @@ Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho
 \subsection{Systemwechsel IIR System}
 
 Der Systemwechsel beim IIR System wird mit den selben Werten wie die anderen Abbildungen aus Abschnitt \ref{sec:fir} untersucht ($N =5$, $\sigma^2 = 0.01$).
-Für die Parameter der Schrittweite und des Vergessensfaktors treffen auch die selben Erkenntnisse zu wie beim Systemwechsel des FIR Systems zu.
+Für die Parameter der Schrittweite und des Vergessensfaktors treffen auch die selben Erkenntnisse zu wie beim Systemwechsel des FIR Systems.
 Durch eine zu große Schrittweite über- bzw. unterschreitet der LMS die optimalen Filterkoeffizienten periodisch und findet so nie die optimalen Werte.
 Der Vergessensfaktor beeinflusst wie in den vorherigen Untersuchungen die Geschwindigkeit des Konvergierens und die Störanfälligkeit des RLS.
-Werden die Parameter auf $\mu = 0.03$ für die Schrittweite und auf $\rho = 0.9$ für den Vergessenfaktor gesetzt, so lass sich wieder annährend identische Ergebnisse für die beiden Algorithmen erzielen (siehe \ref{fig:SW_IIR_1}).
-Jedoch gilt für den ersten Teil des Signals vor dem Systemwechsel, wie schon in Abschnitt \ref{sec:iir}, dass das IIR System mit den beiden verwendeten Algorithmen nicht perfekt nachgebildet werden kann, da sie im unterschied zum IIR System keinen rekursiven Anteil haben.
-Das zweite System scheint keinen oder nur einen sehr gering gewichteten rekursiv Teil zu haben, da der Fehler beider Algorithmen zu 0 konvergiert.
+Werden die Parameter auf $\mu = 0.03$ für die Schrittweite und auf $\rho = 0.9$ für den Vergessenfaktor gesetzt, lassen sich wieder annährend identische Ergebnisse für die beiden Algorithmen erzielen (siehe \ref{fig:SW_IIR_1}).
+Jedoch gilt für den ersten Teil des Signals vor dem Systemwechsel, wie schon in Abschnitt \ref{sec:iir}, dass das IIR System mit den beiden verwendeten Algorithmen nicht perfekt nachgebildet werden kann, da die Algorithmen im Unterschied zum IIR System keinen rekursiven Anteil haben.
+Das zweite System scheint keinen oder nur einen sehr gering gewichteten rekursiv Teil zu haben, da der Fehler beider Algorithmen gegen 0 konvergiert.
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.9\textwidth]{{{figures/IIR_Systemwechsel/mu_0.03_rho_0.9}}}
- \caption{Systemwechsel im IIR System mit einem Vergessenfaktor von $\rho = 0.9$ und einer Schrittweite von $\mu = 0.03$.}
+ \caption{Systemwechsel im IIR System mit einem Vergessensfaktor von $\rho = 0.9$ und einer Schrittweite von $\mu = 0.03$.}
 	\label{fig:SW_IIR_1}
 \end{figure}
 
@@ -376,7 +376,7 @@ Das zweite System scheint keinen oder nur einen sehr gering gewichteten rekursiv
 In seiner Grundeinstellung eignet sich der LMS Algorithmus besser um trotz eines Systemwechsels innerhalb einer sehr kurzen Adaptionszeit gute Ergebnisse für die Filterkoeffizienten zu liefern.
 Dies liegt an der Struktur des LMS, da er für seine Berechnung nur eine kleine Menge ($N$) an vergangenen Werte berücksichtigt.
 Dadurch kann er schneller auf ein sich veränderndes System reagieren.
-Während das Miteinbeziehen aller vorheriger Werte durch den RLS in den vorherigen Systemidentifikation von statischen System vorteilhaft war und zu einer extrem kurzen Konvergenzzeit geführt hat, wird diese Eigenschaft bei einem Systemwechsel zu einem Nachteil, weil der Algorithmus nicht schnell genug auf die Änderungen reagieren kann.
+Während das Miteinbeziehen aller vorheriger Werte durch den RLS in den vorherigen Systemidentifikationen von statischen Systemen vorteilhaft war und zu einer extrem kurzen Konvergenzzeit geführt hat, wird diese Eigenschaft bei einem Systemwechsel zu einem Nachteil, weil der Algorithmus nicht schnell genug auf die Änderungen reagieren kann.
 Dies kann durch das richtige Einstellen des Vergessensfaktors behoben werden und dem RLS ebenfalls zu einer schnellen Konvergenzzeit nach dem Systemwechsel verhelfen.
 Wie aus den Plots \ref{fig:SW_FIR_3} und \ref{fig:SW_IIR_1} hervorgeht bedeutet dies, dass bei einer korrekten Wahl der jeweiligen Parameter keiner der beiden Algorithmen dem Anderen überlegen ist.
 Bei beiden Algorithmen ist zu berücksichtigen, dass die Einstellung des Vergessensfaktors bzw. der Schrittweite immer einen Trade-off zwischen der Konvergenzzeit und der Stabilität des Verlaufs der Koeffizienten darstellt.
