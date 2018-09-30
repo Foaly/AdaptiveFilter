@@ -302,19 +302,34 @@ Der RLS ist erneut leicht robuster gegenüber hinzugefügtem Rauschen verglichen
 \subsection{Adaptionsverhalten}
 
 
+
+
+
+
 \section{Kernel Least Mean Squares}
-\label{sec:4}
+\label{sec:klms}
+
+In diesme Abschnitt wird ein dritter Algorithmus, der Kernel Least Mean Squares (KLMS), zur identifiaktion der unbekannten Systeme angewendet.
+Er nimmt eine Zeitreihenschätzung vor und approximiert die Filterkoeffizienten des unbekannten Systems mit Hilfe eins Trainingsdatensatzes.
+Der in der Aufgabenstellung zur verfügung gestellte Trainingsdatensatz ($Training.mat$) umfasst 500 Werte.
+Die Performance der auf dem Trainingsdatensatz trainierten Filter wird schließlich mit Hilfe einer Testdatenreihe ($Test.mat$) mit 2000 Werten untersucht.
+Anschließend sollen die trainierten Filter mit dem LMS verglichen werden.
+
+Zwei unterschiedliche Filter wurden trainiert, einmal mit 5 (siehe Abbilding \ref{fig:klms5}) und einmal 10 (siehe Abbilding \ref{fig:klms10}) Filterkoeffizienten.
+Die Parameter $\mu$ und $\sigma$ können dabei frei gewählt und ihr Einfluss soll genauer erleutert werden.
+Die vorgestellten Ergebnisse der KLMS Filter wurden auf Basis eines Gauss-Kernels erstellt.
+Alternativ können auch andere Kernel gewählt werden (z.B. Laplace).
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.7\textwidth]{{{figures/klms_5}}}
+      \includegraphics[width=0.7\textwidth]{{{figures/KLMS_5_0.5_0.5_kernel_weights}}}
   \caption{Training mit KLMS und 5 Filterkoeffizienten}
   \label{fig:klms5}
 \end{figure}
 
 \begin{figure}[H]
   \centering
-      \includegraphics[width=0.7\textwidth]{{{figures/klms_10}}}
+      \includegraphics[width=0.7\textwidth]{{{figures/KLMS_10_0.5_0.5_kernel_weights}}}
   \caption{Training mit KLMS 10 Filterkoeffizienten}
   \label{fig:klms10}
 \end{figure}
