@@ -4,9 +4,21 @@ import scipy.signal
 import matplotlib.pyplot as plt
 
 
+# x = Eingangsvektor
+# N = Anzahl der Samples über die gemittelt wird
+
 def smoother(x, N):
     csum = np.cumsum(np.insert(x, 0, 0))
     return (csum[N:] - csum[:-N]) / float(N)
+
+
+# x        = Eingangsvektor
+# variance = Varianz des Rauschen
+
+def addNoise(x, variance):
+    sigma = np.sqrt(variance)
+    return x + np.random.normal(0.0, sigma, x.size)
+
 
 # x = Eingangsvektor
 # d = Rauschen + Ausgangssignal vom unbekanten system
@@ -86,8 +98,6 @@ def rls(x, d, M, rho):
     # Quadratischer Fehler
     e = np.square(e)
     return W, e, y
-
-
 
 
 # KLMS
@@ -177,19 +187,7 @@ class klmsHelper():
         self.errors.append(self.error ** 2)
 
 
-
-
-
-# x        = Eingangsvektor
-# variance = Varianz des Rauschen
-
-def addNoise(x, variance):
-    sigma = np.sqrt(variance)
-    return x + np.random.normal(0.0, sigma, x.size)
-
-
-
-# Script
+# Plots für die FIR, IIR, FIR-Systemwechsel und IIR-Systemwechsel
 
 μ = 0.03
 rho = 0.9
@@ -279,7 +277,7 @@ test_data = mat_test['x_test'].flatten()
 #         plt.show()
 
 
-# Plots
+# Plots für den Vergleich unterschiedlicher Schrittweiten µ
 # d = addNoise(d_, 0.001)
 # N = 5
 # end = 2000
@@ -303,6 +301,8 @@ test_data = mat_test['x_test'].flatten()
 #     plt.savefig("lms_N_5_var_0.001_mu_" + str(μ) + ".pdf", bbox_inches='tight')
 #     plt.show()
 
+
+# KLMS Training
 
 for [M, mu, sigma] in [[5, 0.5, 0.5]]:#, [10, 0.5, 0.5]]:
     prefix = 'KLMS_' + str(M) + '_' + str(mu) + '_' + str(sigma)
@@ -338,7 +338,7 @@ for [M, mu, sigma] in [[5, 0.5, 0.5]]:#, [10, 0.5, 0.5]]:
     testPrediction = np.loadtxt(testPredictionName + '.txt')
     kernelWeights = np.loadtxt(kernelWeigthName + '.txt')
 
-    # # plotting
+    # KLMS plotting
     # N = len(trainPrediction);
     # M2 = M - 1
     #
