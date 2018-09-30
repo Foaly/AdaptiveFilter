@@ -200,15 +200,15 @@ mat_IIR = scipy.io.loadmat('System_IIR25')
 mat_FIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_FIR25')
 mat_IIR_Systemwechsel= scipy.io.loadmat('Systemwechsel_IIR25')
 
-x = mat_FIR["X"][0]
+# x = mat_FIR["X"][0]
 # x = mat_IIR["X"][0]
-# x = mat_FIR_Systemwechsel["X"][0]
+x = mat_FIR_Systemwechsel["X"][0]
 # x = mat_IIR_Systemwechsel["X"][0]
 
 # d_ = scipy.signal.lfilter([0.7, 0.1, -0.03, 0.18, -0.24], [1], x)
-d_ = mat_FIR["D_"][0]
+# d_ = mat_FIR["D_"][0]
 # d_ = mat_IIR["D_"][0]
-# d_ = mat_FIR_Systemwechsel["D_"][0]
+d_ = mat_FIR_Systemwechsel["D_"][0]
 # d_ = mat_IIR_Systemwechsel["D_"][0]
 
 
@@ -220,13 +220,13 @@ test_data = mat_test['x_test'].flatten()
 
 
 for variance in [0.001]: #, 0.1, 1.0, 10.0]:
-    for N in [2]:
+    for N in [5]:
         d = addNoise(d_, variance)
 
-        end = 2000
+        end = 10000
 
-        w1, e1, y1 = rls(x, d, N, 0.5)
-        w2, e2, y2 = rls(x, d, N, 0.99)
+        w1, e1, y1 = lms(x, d, N, μ)
+        w2, e2, y2 = rls(x, d, N, rho)
 
         avg_e1 = np.average(e1)
         avg_e2 = np.average(e2)
@@ -238,7 +238,7 @@ for variance in [0.001]: #, 0.1, 1.0, 10.0]:
         e1 = smoother(e1, 30)
         axarr[0][0].plot(e1[:end], 'b', linewidth=1)
         axarr[0][0].plot([0, end], [avg_e1, avg_e1], 'r--', linewidth=1.2)
-        axarr[0][0].set_title('RLS (ρ = 0.5)')
+        axarr[0][0].set_title('LMS (Squared Error)')
         axarr[0][0].set_xlabel("Samples")
         axarr[0][0].set_ylabel("Squared Error")
         axarr[0][0].grid(True)
@@ -249,7 +249,7 @@ for variance in [0.001]: #, 0.1, 1.0, 10.0]:
             axarr[0][1].plot(w1[coeff][:end], linewidth=1)
         legend = ['w' + str(i+1) + ' = ' + str(np.around(w1[i, -1], 3)) for i in range(0, coeffCount)]
         axarr[0][1].legend(legend, loc='right', title="Final Weights")
-        axarr[0][1].set_title('RLS (Filterkoeffizienten)')
+        axarr[0][1].set_title('LMS (Filterkoeffizienten)')
         axarr[0][1].set_xlabel("Samples")
         axarr[0][1].set_ylabel("Koeffizienten")
         axarr[0][1].set_xlim([-10, end])
@@ -257,7 +257,7 @@ for variance in [0.001]: #, 0.1, 1.0, 10.0]:
         e2 = smoother(e2, 30)
         axarr[1][0].plot(e2[:end], 'b', linewidth=1)
         axarr[1][0].plot([0, end], [avg_e2, avg_e2], 'r--', linewidth=1.2)
-        axarr[1][0].set_title('RLS (ρ = 0.99)')
+        axarr[1][0].set_title('RLS (Squared Error)')
         axarr[1][0].set_xlabel("Samples")
         axarr[1][0].set_ylabel("Squared Error")
         axarr[1][0].grid(True)
@@ -273,9 +273,9 @@ for variance in [0.001]: #, 0.1, 1.0, 10.0]:
         axarr[1][1].set_ylabel("Koeffizienten")
         axarr[1][1].set_xlim([-10, end])
 
-        plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
+        # plt.savefig("N_" + str(N) + "_var_" + str(variance) + ".pdf", bbox_inches='tight')
         # plt.savefig("N_" + str(N) + "_var_" + str(variance) + "_mu_" + str(μ) + ".pdf", bbox_inches='tight')
-        # plt.savefig("mu_" + str(μ) + "_rho_" + str(rho) + ".pdf", bbox_inches='tight')
+        plt.savefig("mu_" + str(μ) + "_rho_" + str(rho) + ".pdf", bbox_inches='tight')
         plt.show()
 
 
