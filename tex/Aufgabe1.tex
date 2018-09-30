@@ -277,15 +277,16 @@ Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS
 
 \subsection{Wahl des Lernalgorithmus}
 
-Die korrekten Werte der Koeffizienten des untersuchten Systems konnte weder mit dem LMS noch dem RLS unter Verwendung verschiedener Parameter berechnet werden.
-Die berechneten Koeffizienten beider Algorithmen konvergieren nicht auf die vorgegebenen Werte und können das System nicht hinreichend genau approximiert.
-Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist die Koeffizienten eines FIR Systems mithilfe des LMS und RLS Algorithmus perfekt nachzubilden.
-Dies wurde, wie in Abschnitt \ref{sec:iir} beschrieben, approximiert.
-Bei einem IIR System ist dies jedoch mit den beiden untersuchten Algorithmen nicht exakt möglich, da IIR Systeme einen rekursiven Signalanteil besitzen, welcher weder im LMS noch im RLS Algorithmen abgebildet wird.
-Auf Grundlage dessen ist mit den beiden Algorithmen nur eine Approximation des IIR Systems möglich.
-Dies erklärt auch warum die exakten Filtergewichte aus \ref{fig:IIR_System} selbst bei einem hohen Wert für $N$ nicht erreicht werden.
-Bei der Robustheit gegenüber Rauschen erweisen sich die Algorithmen als leicht anfälliger im Vergleich zur Untersuchung des FIR Systems.
-Der RLS ist erneut leicht robuster gegenüber hinzugefügtem Rauschen verglichen mit dem LMS.
+
+Wie schon in der Untersuchung des vorhergehenden Systems ist der RLS im Vergleich zum LMS weniger empfindlich gegen hinzugefügtes Rauschen als der LMS.
+
+Eine Auffälligkeit im Vergleich zur vorhergehenden Untersuchung des FIR Systems, ist das beide Algorithmen nicht auf die korrekten Werte des IIR Systems erreichen.
+Die beiden Algorithmen konvergieren auf andere Werte und approximieren mit diesen lediglich die Filterkoeffizienten des IIR Systems.
+Theoretisch ist es dem LMS und RLS Algorithmus möglich das vorher untersuchte FIR System korrekt abzubilden, in dem die exakten Filterkoeffizienten des Systems erreicht werden. 
+Die ist den beiden verwendeten Algorithmen bei einem IIR System nicht möglich, da ein IIR System einen rekursiven Anteil enthält, den diese nicht abbilden können.
+Deshalb ist nur die hier beobachtet Approximation des Systems möglich.
+
+
 
 
 
@@ -373,13 +374,15 @@ Das zweite System scheint keinen oder nur einen sehr gering gewichteten rekursiv
 
 \subsection{Ergebnis}
 
-In seiner Grundeinstellung eignet sich der LMS Algorithmus besser um trotz eines Systemwechsels innerhalb einer sehr kurzen Adaptionszeit gute Ergebnisse für die Filterkoeffizienten zu liefern.
-Dies liegt an der Struktur des LMS, da er für seine Berechnung nur eine kleine Menge ($N$) an vergangenen Werte berücksichtigt.
-Dadurch kann er schneller auf ein sich veränderndes System reagieren.
-Während das Miteinbeziehen aller vorheriger Werte durch den RLS in den vorherigen Systemidentifikationen von statischen Systemen vorteilhaft war und zu einer extrem kurzen Konvergenzzeit geführt hat, wird diese Eigenschaft bei einem Systemwechsel zu einem Nachteil, weil der Algorithmus nicht schnell genug auf die Änderungen reagieren kann.
-Dies kann durch das richtige Einstellen des Vergessensfaktors behoben werden und dem RLS ebenfalls zu einer schnellen Konvergenzzeit nach dem Systemwechsel verhelfen.
-Wie aus den Plots \ref{fig:SW_FIR_3} und \ref{fig:SW_IIR_1} hervorgeht bedeutet dies, dass bei einer korrekten Wahl der jeweiligen Parameter keiner der beiden Algorithmen dem Anderen überlegen ist.
-Bei beiden Algorithmen ist zu berücksichtigen, dass die Einstellung des Vergessensfaktors bzw. der Schrittweite immer einen Trade-off zwischen der Konvergenzzeit und der Stabilität des Verlaufs der Koeffizienten darstellt.
+
+Betrachtet man den LMS Algorithmus im Vergleich mit dem RLS ohne eine korrekte Einstellung des Vergessensfaktor, so ist deutlich zu sehen, das er bei einem Systemwechsel eine deutliche kürze Adaptionszeit hat um sich an die neuen Filterkoeffizienten anzupassen.
+Zurückzuführen ist das auf den Aufbau des LMS, der nur $N$ Werte für seine Adaption berücksichtigt.
+Dies ermöglicht es ihm sich auf ein neues System schneller einzustellen.
+Der RLS hingegen verwendet für seine Berechnung alle bisherigen Werte des Systems und ist deshalb nicht in der Lage schnell genug die Filterkoeffizienten nach zuführen.
+Durch die Gewichtung der bisherigen Werte mit dem Vergessensfaktor ist es möglich den RLS so einzustellen, dass er ebenfalls eine schnelle Konvergenzzeit nach einem Systemwechsel aufweist.
+Werden die Parameter für den Vergessensfaktor und die Schrittweite entsprechend gewählt, so ist es möglich mit beiden Algorithmen ähnlich gute Resultate zu erreichen.
+Es muss dabei jedoch stehts zwischen der Konvergenzzeit und der Menge an Fluktuationen in den Filterkoeffizienten abgewägt werden.
+
 
 
 
