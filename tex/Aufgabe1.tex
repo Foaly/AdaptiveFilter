@@ -1,11 +1,13 @@
 \section{Einführung}
 \label{sec:intor}
 
-Die vorliegende Aufgabe dreht sich um die Systemidentifikation zweier System.
+Die vorliegende Aufgabe dreht sich um die Systemidentifikation mit Hilfe adaptiver Filter.
 Dafür wurden in der Aufgabenstellung jeweils ein FIR und ein IIR Filter gegeben.
 Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollten die Koeffizienten der gegebenen System identifiziert werden.
+Außerdem werden die Auswirkungen eines Systemwechsels auf die Algorithmen untersucht.
 Als Vorbereitung auf die Systemidentifikation wurden der Least-Mean-Square Algorithmus (LMS) und der Recursive-Least-Squares Algorithmus mit Vergessenfaktor (RLS) implementiert.
-Die Implementation erfolgte in Python\footnote{Software Repository: \url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S.85 und RLS nach S.145).
+Die Implementation erfolgte in Python\footnote{Software Repository: \url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S. 145).
+Anschließend wird noch eine Zeitreihenschätzung mit Hilfe des Kernel Least Mean Squares (KLMS) Verfahren nach der Rechenvorschrift von Weifeng \cite{weifeng2010} (S. 34) implementiert.
 
 \section{FIR-Filter}
 \label{sec:fir}
@@ -22,10 +24,10 @@ Der Einfluss unterschiedlicher Parameter, wie die Anzahl der Filterkoeffizienten
 \end{figure}
 
 In den entstandenen Plots werden die Ergebnisse des LMS und RLS Algorithmus mit Hilfe von je zwei Plots charakterisiert. 
-Auf der linken Seite ist der quadratischen Fehlers (Mean-Square-Error bzw. MSE) über den zeitlichen Verlauf in Samplen dargestellt. 
+Auf der linken Seite ist der quadratischen Fehlers (Squared-Error bzw. SE) über den zeitlichen Verlauf in Samplen dargestellt. 
 Ein gegen 0 konvergierender Verlauf des Fehlers ist wünschenswert, da dies bedeutet, dass die Differenz zwischen Ausgang des Filters und dem gewünschten Signal kleiner wird und der Algorithmus sein Ergebnis damit selbst verbessert.
 Die gestrichelte rote Linie zeigt den Durchschnittswert des Fehlers an, welche es vereinfacht den Wert abzulesen, auf den der Fehler konvergiert.
-Außerdem sei angemerkt, dass der Plot des Fehler mit einem Rolling Average von 30 Samplen geglättet wurde, um einzelne Ausreißer zu entfernen und die Lesbarkeit zu erhöhen.
+Außerdem sei angemerkt, dass der Plot des Fehler mit einem Moving Average von 30 Samplen geglättet wurde, um einzelne Ausreißer zu entfernen und die Lesbarkeit zu erhöhen.
 Auf der rechten Seite der Abbildung ist eine Verlaufskurve der des Algorithmus gelernte Filterkoeffizienten zu sehen, woraus sich das Adaptionsverhalten des Algorithmus ablesen lässt.
 Im Idealfall sollten auch diese je auf einen Wert konvergieren.
 Ist dies nicht der Fall, so zeigt dies, dass das Eingangssignal ungeeignet für die Bearbeitung mit diesem Algorithmus ist oder die Einstellung des Algorithmus nicht optimal sind.
@@ -109,7 +111,7 @@ Dies lässt darauf schließen, dass der Signal-Rausch-Abstand (SNR) so gering is
 
 Der Vergessensfaktor $\rho$ ist ein Parameter des RLS Algorithmus und liegt im Wertebereich $0 < \rho \leq 1$.
 Er dient als Faktor, der bestimmt wie stark in der Vergangenheit zurückliegende Werte gewichtet werden.
-Ein Vegessensfaktor von 1 bedeutet, dass alle bisherigen Wert in die Berechnung mit einbezogen werden.
+Ein Vegessensfaktor von 1 bedeutet, dass alle bisherigen Werte in die Berechnung mit einbezogen werden.
 Ist der Wert von $\rho$ sehr gering, so werden nur die kleiner Teil der am Kürzesten zurückliegenden Werte berücksichtigt.
 Während ein hoher Wert dazu führt, dass der RLS Algorithmus sich schlecht an ein sich veränderndes System anpassen kann (siehe Abschnitt \ref{sec:Systemwechsel} Systemwechsel), führt ein zu niedriger Wert zu Stabilitätsproblemen, da nie genug Werte miteinbezogen werden, um das System zu identifizieren.
 Betrachtet man die Abbildungen \ref{fig:rho_vergleich} so wird dies ebenfalls deutlich.
@@ -165,21 +167,21 @@ Die bisherigen Plots \ref{fig:N1} bis \ref{fig:sig10} wurden mit einer Schrittwe
 
 \subsection{Wahl des Lernalgorithmus}
 
-Betrachtet man grundlegend nur den Code der beiden Algorithmen so wird deutlich, dass die Algorithmen unterschiedliche Komplexitäten und daraus resultierende Laufzeiten haben.
-Der RLS dabei weist eine höhere Komplexität und Laufzeit auf als der LMS.
+Betrachtet man zunächst nur den Code der beiden Algorithmen so wird deutlich, dass die Algorithmen ein unterschiedliche Komplexität und eine daraus resultierende unterschiedliche Laufzeiten haben.
+Der RLS weist dabei eine höhere Komplexität und Laufzeit auf als der LMS.
 
 Außerdem unterscheiden sich die beiden Algorithmen in ihrer Konvergenzzeit der Filterkoeffizienten.
-In den hier betrachteten Abbildungen konvergieren die Filterkoeffizienten des RLS schneller als die des LMS, selbst bei einem größeren Wert für die Schrittweite $\mu$ des LMS.
-Der Grund dafür liegt im Aufbau der Algorithmen.
+In den oben betrachteten Abbildungen konvergieren die Filterkoeffizienten des RLS schneller als die des LMS, selbst bei einem größeren Wert für die Schrittweite $\mu$ des LMS.
+Der Grund dafür liegt in der Architektur der Algorithmen selbst.
 Der LMS berücksichtigt bei jeder Interation seiner Adaption jeweils nur die letzten $N$ Werte.
 Der RLS hingegen bezieht durch das Aufdatieren der inversen deterministischen Autokorellationsmatrix alle bisherigen Werte, gewichtet durch einen Vergessenfaktor, mit in die Berechnung ein.
 Dies führt zur Beobachteten schnelleren Konvergenzzeit des RLS.
-Durch das Wählen einer entsprechende Schrittweite lassen sich beim LMS zwar ähnlich schnelle Konvergenzzeiten der Filterkoeffizienten erreichen, allerdings führt dies zu sehr verrauschten und schwankenden Filterkoeffizienten, da der LMS durch die größere Schrittweite die Optimalwerte ständig über- und unterschreitet.
+Durch das Wählen einer entsprechende Schrittweite lassen sich beim LMS zwar ähnlich schnelle Konvergenzzeiten der Filterkoeffizienten erreichen, allerdings führt dies zu sehr verrauschten und stark schwankenden Filterkoeffizienten, da der LMS durch die größere Schrittweite die Optimalwerte ständig über- und unterschreitet.
 Durch das Einbeziehen aller bisheriger Werte erziehlt der RLS wesentlich stabiler Filterkoeffizienten.
 Auch das hinzugefügte AWGS stört aus diesem Grund den Verlauf der Filterkoeffizienten des RLS nicht so stark wie die des LMS.
 Da es sich bei dem vorliegenden Signal um einen stationären, stochastischen Prozess handelt spielt der Vergessenfaktor $\rho$ des RLS für die Konvergenzzeit noch keine Rolle.
 
-Auf Grund der Eigenschaften des Prozesses liefern beide beide Algorithmen bei der entsprechenden Wahl der Parameter sehr ähnliche Ergebnisse.
+Auf Grund der Eigenschaften des Prozesses liefern beide Algorithmen bei der entsprechenden Wahl der Parameter sehr ähnliche Ergebnisse.
 
 
 
@@ -190,7 +192,7 @@ Auf Grund der Eigenschaften des Prozesses liefern beide beide Algorithmen bei de
 \section{IIR-Filter}
 \label{sec:iir}
 
-Das zweite System das untersucht werden soll ist ein IIR Filter.
+Das zweite System das untersucht werden soll ist ein IIR Filter mit 2 Filterkoeffizienten.
 Bei der Systemidentifikation wird hier analog zu Abschnitt \ref{sec:fir} vorgegangen und die Ergebnisse des LMS und RLS Algorithmus unter Einfluss unterschiedlicher Parameter untersucht.
 
 \begin{figure}[H]
@@ -207,8 +209,8 @@ Bei der Systemidentifikation wird hier analog zu Abschnitt \ref{sec:fir} vorgega
 Ähnlich zur Untersuchung des FIR Filters wurde eine unterschiedliche Anzahl an Filterkoeffizienten verwendet und seine Auswirkung auf das Verhalten der Algorithmen überprüft ($N \in \{1, 2, 5\}$).
 Anders als beim FIR Filter fällt beim Betrachten der Legenden der Filterkoeffizientenverläufe auf, dass die idealen Filterkoeffizienten bei der korrekten Anzahl ($N = 2$) nicht bestimmt werden konnten.
 Selbst eine höhere Anzahl an Filterkoeffizienten (siehe Abb. \ref{fig:iir_N5}) führt nicht dazu das die Filterkoeffizienten auf die korrekten Werte konvergieren.
-Es ist in Abbildungen \ref{fig:iir_N1} bis \ref{fig:iir_N5} jedoch zu beobachten, dass der quadratische Fehler mit einer steigenden Anzahl an Filterkoeffizienten zunehmen kleiner wird.
-Während in Abbildung \ref{fig:iir_N1} der Wert bei $MSE \approx 1.9$ liegt, so ist der Wert bei $N = 5$ in Abbildung \ref{fig:iir_N5} auf ca. $0.25$ gesunken.
+In den Abbildungen \ref{fig:iir_N1} bis \ref{fig:iir_N5} jedoch zu beobachten, dass der quadratische Fehler mit einer steigenden Anzahl an Filterkoeffizienten zunehmen kleiner wird.
+Während in Abbildung \ref{fig:iir_N1} der Wert bei $Squared Error \approx 1.9$ liegt, so ist der Wert bei $N = 5$ in Abbildung \ref{fig:iir_N5} auf ca. $0.25$ gesunken.
 
 
 \begin{figure}[H]
@@ -237,10 +239,12 @@ Während in Abbildung \ref{fig:iir_N1} der Wert bei $MSE \approx 1.9$ liegt, so 
 
 \subsection{Einfluss der Varianz}
 
-Beim Betrachten des Einflusses der Varianz des hinzugefügten AWGN zeigen sich deutliche Parallelen zu den Ergebnissen aus Abschnitt \ref{sec:FIR_sigma}.
+Beim Betrachten des Einflusses der Varianz des hinzugefügten AWGN zeigen sich deutliche Parallelen zu den Ergebnissen aus Abschnitt \ref{sec:FIR_sigma} der Untersuchung des FIR Systems.
 Auch hier bedeutet eine Zunahme der Varianz des hinzugefügten Rauschens eine Zunahme des quadratischen Fehlers.
 Vergleicht man die Abbildung \ref{fig:sig1} mit \ref{fig:IIR_sig1} und \ref{fig:sig10} mit \ref{fig:IIR_sig10} so sieht man das der Fehler beim Untersuchen des IIR Filters leicht über den Werten für den Fehler des FIR Filters liegt.
 Das Adaptionsverhalten der Filterkoeffizienten ist wird durch die höhere Varianz des Rauschen ebenfalls beeinflusst und führt zu einem unruhigeren Verlauf der Koeffizienten.
+Die Algorithmen gelingt die Adaption für das IIR System also leicht schlechter als für das FIR System.
+
 
 \begin{figure}[H]
   \centering
@@ -259,18 +263,20 @@ Das Adaptionsverhalten der Filterkoeffizienten ist wird durch die höhere Varian
 
 \subsection{Einfluss des Schrittweite \boldmath{$\mu$} und des Vergessensfaktors \boldmath{$\rho$}}
 
-Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS respektive des RLS Algorithmus sind und nicht Eigenschaften des Signals, sind die Einflüsse dieser Parameter identisch zu deren Beschreibung in \ref{sec:FIR_mu} und \ref{sec:FIR_rho}.
+Da die Schrittweite $\mu$ und der Vergessensfaktors $\rho$ Eigenschaften des LMS respektive des RLS Algorithmus sind und nicht Eigenschaften des zu untersuchenden Systems, sind die Einflüsse dieser Parameter identisch zu deren Beschreibung in Abschnitt \ref{sec:FIR_mu} und \ref{sec:FIR_rho} der Untersuchung des FIR Systems.
 
 
 \subsection{Wahl des Lernalgorithmus}
 
-Die korrekten Werte der Koeffizienten konnte weder mit dem LMS noch dem RLS mit verschiedenen Parametern hinreichend genau approximiert werden.
-Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist ein FIR Filter mithilfe des LMS und RLS Algorithmus perfekt nachzubilden.
+Die korrekten Werte der Koeffizienten des untersuchten Systems konnte weder mit dem LMS noch dem RLS unter Verwendung verschiedener Parameter berechnet werden.
+Die berechneten Koeffizienten beider Algorithmen konvergierten nicht auf die Vorgegebenen, sondern konvergierten auf andere Werte, um das System hinreichend genau approximiert.
+Es ist zu beachten, dass es unter idealen Bedingungen (kein Rauschen, korrekte Parameter etc.) möglich ist die Koeffizienten eines FIR Systems mithilfe des LMS und RLS Algorithmus perfekt nachzubilden.
 Dies wurde, wie in Abschnitt \ref{sec:iir} beschrieben, approximiert.
-Bei einem IIR System ist dies jedoch nicht exakt möglich, da es eine rekursiven Anteil besitzt, welcher in den LMS und RLS Algorithmen nicht abgebildet wird.
+Bei einem IIR System ist dies jedoch mit den beiden untersuchten Algorithmen nicht exakt möglich, da IIR Systeme einen rekursiven Anteil besitzen, welcher weder im LMS noch im RLS Algorithmen abgebildet werden können.
 Auf Grundlage dessen ist mit den beiden Algorithmen nur eine Approximation des IIR Systems möglich.
 Dies erklärt auch warum die exakten Filtergewichte aus \ref{fig:IIR_System} selbst bei einem hohen Wert für $N$ nicht erreicht wurden.
-Bei der Robustheit gegenüber Rauschen erweist sich der RLS gegenüber dem LMS erneut als robuster.
+Bei der Robustheit gegenüber Rauschen erweisen sich die Algorithmen als leicht anfälliger im Vergleich zur Untersuchung des FIR Systems.
+Der RLS ist erneut leicht robuster gegen hinzugefügtes Rauschen verglichen mit dem LMS.
 
 
 
