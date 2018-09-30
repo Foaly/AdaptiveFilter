@@ -3,7 +3,7 @@
 
 Die vorliegende Aufgabe dreht sich um die Systemidentifikation mit Hilfe adaptiver Filter.
 Dafür wurden in der Aufgabenstellung jeweils ein FIR und ein IIR Filter gegeben.
-Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollten die Koeffizienten der gegebenen System identifiziert werden.
+Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollen die Koeffizienten der gegebenen Systeme identifiziert werden.
 Außerdem werden die Auswirkungen eines Systemwechsels auf die Algorithmen untersucht.
 Als Vorbereitung auf die Systemidentifikation wurden der Least-Mean-Square Algorithmus (LMS) und der Recursive-Least-Squares Algorithmus mit Vergessenfaktor (RLS) implementiert.
 Die Implementation erfolgte in Python\footnote{Software Repository: \url{https://github.com/Foaly/AdaptiveFilter}} anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S. 145).
@@ -14,7 +14,8 @@ Anschließend wird noch eine Zeitreihenschätzung mit Hilfe des Kernel Least Mea
 
 Die erste Aufgabe ist die Systemidentifikation eines FIR Filters mit 5 Koeffizienten.
 Das System wird mit Hilfe der LMS und RLS (mit Vergessensfaktor) Algorithmen identifiziert.
-Der Einfluss unterschiedlicher Parameter, wie die Anzahl der Filterkoeffizienten, die Varianz des hinzugefügten Rauschens und die Werte für Schrittweite oder Vergessensfaktor auf das Ergebnis wird dabei untersucht.
+Dabei wird der Einfluss durch unterschiedliche Parameter auf das Ergebnis untersucht.
+Dazu gehören die Anzahl der Filterkoeffizienten, die Varianz des hinzugefügten Rauschens und die Werte für Schrittweite und Vergessensfaktor.
 
 \begin{figure}[H]
   \centering
