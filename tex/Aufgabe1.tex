@@ -359,7 +359,8 @@ Für die Parameter der Schrittweite und des Vergessensfaktors treffen auch die s
 Durch eine zu große Schrittweite über- bzw. unterschreitet der LMS die optimalen Filterkoeffizienten periodisch und findet so nie die optimalen Werte.
 Der Vergessensfaktor beeinflusst wie in den vorherigen Untersuchungen die Geschwindigkeit des Konvergierens und die Störanfälligkeit des RLS.
 Werden die Parameter auf $\mu = 0.03$ für die Schrittweite und auf $\rho = 0.9$ für den Vergessenfaktor gesetzt, so lass sich wieder annährend identische Ergebnisse für die beiden Algorithmen erzielen (siehe \ref{fig:SW_IIR_1}).
-Jedoch gilt auch hier, wie schon in Abschnitt \ref{sec:iir}, dass das IIR System mit den beiden verwendeten Algorithmen nicht perfekt nachgebildet werden kann, da sie im unterschied zum IIR System keinen rekursiven Anteil haben.
+Jedoch gilt für den ersten Teil des Signals vor dem Systemwechsel, wie schon in Abschnitt \ref{sec:iir}, dass das IIR System mit den beiden verwendeten Algorithmen nicht perfekt nachgebildet werden kann, da sie im unterschied zum IIR System keinen rekursiven Anteil haben.
+Das zweite System scheint keinen oder nur einen sehr gering gewichteten rekursiv Teil zu haben, da der Fehler beider Algorithmen zu 0 konvergiert.
 
 \begin{figure}[H]
   \centering
