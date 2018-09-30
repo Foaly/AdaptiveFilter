@@ -374,32 +374,54 @@ Dort wurde eine Schrittweite von $\mu = 0.03$ und eine Vergessenfaktor von $\rho
 
 
 
-\section{Kernel Least Mean Squares}
+\section{Kernel Least Mean Squares Algorithmus}
 \label{sec:klms}
 
-In diesme Abschnitt wird ein dritter Algorithmus, der Kernel Least Mean Squares (KLMS), zur identifiaktion der unbekannten Systeme angewendet.
-Er nimmt eine Zeitreihenschätzung vor und approximiert die Filterkoeffizienten des unbekannten Systems mit Hilfe eins Trainingsdatensatzes.
+In diesem Abschnitt wird ein dritter Algorithmus, der Kernel Least Mean Squares (KLMS), zur identifiaktion der unbekannten Systeme angewendet.
+Er nimmt eine Zeitreihenschätzung vor und approximiert die Filterkoeffizienten des unbekannten Systems mit Hilfe eines Trainingsdatensatzes.
 Der in der Aufgabenstellung zur verfügung gestellte Trainingsdatensatz ($Training.mat$) umfasst 500 Werte.
-Die Performance der auf dem Trainingsdatensatz trainierten Filter wird schließlich mit Hilfe einer Testdatenreihe ($Test.mat$) mit 2000 Werten untersucht.
+Die Performance der auf dem Trainingsdatensatz trainierten Filter wird schließlich mit Hilfe einer Testdatenreihe ($Test.mat$) mit 10000 Werten untersucht.
 Anschließend sollen die trainierten Filter mit dem LMS verglichen werden.
 
+
+\subsection{Filterentwurf}
+
 Zwei unterschiedliche Filter wurden trainiert, einmal mit 5 (siehe Abbilding \ref{fig:klms5}) und einmal 10 (siehe Abbilding \ref{fig:klms10}) Filterkoeffizienten.
-Die Parameter $\mu$ und $\sigma$ können dabei frei gewählt und ihr Einfluss soll genauer erleutert werden.
+Die Parameter $\mu$ und $\sigma$ wurden frei gewählt.
 Die vorgestellten Ergebnisse der KLMS Filter wurden auf Basis eines Gauss-Kernels erstellt.
 Alternativ können auch andere Kernel gewählt werden (z.B. Laplace).
+
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.7\textwidth]{{{figures/KLMS_5_0.5_0.5_kernel_weights}}}
-  \caption{Training mit KLMS und 5 Filterkoeffizienten}
+  \caption{Training und Test mit KLMS und 5 Filterkoeffizienten}
   \label{fig:klms5}
 \end{figure}
 
 \begin{figure}[H]
   \centering
       \includegraphics[width=0.7\textwidth]{{{figures/KLMS_10_0.5_0.5_kernel_weights}}}
-  \caption{Training mit KLMS 10 Filterkoeffizienten}
+  \caption{Training und Test mit KLMS und 10 Filterkoeffizienten}
   \label{fig:klms10}
 \end{figure}
+
+
+Es fällt auf, dass die trainierten Filter im Trainingsdurchlauf einen kleineren Fehler aufweisen als im Testdurchlauf.
+Mit diesem Verhalten war zu rechenen, da sich die Systeme im Lernprozess systematisch anpassen.
+Die wahl der Parameter $\mu$ und $\sigma$ wurden über mehrere Iteration verfeinert.
+Dabei hatte die breite der Gauss-Kerne durch die Varianz $sigma$ einen ebensowitchtigen Einfluss wie die Schrittweite $\mu$.
+Schließlich wurden für $\mu = 1.0$ und $\sigma = 0.5$ gewählt, womit die Filter sich am besten angepasst haben.
+Bei einer tiefgehenderen Untersuchung der Systeme könnte mit Hilfe einer Korssvallidierung versucht werden, die möglichst optimalen $\mu$ und $\sigma$ Parameter zu ermittlen.
+
+
+\subsection{Vergleich von KLMS und LMS}
+Es wurden LMS Systeme auf Grundlage der Trainingsdaten erstellt.
+Um einen Vergleich mit den trainierten KLMS Systemen vornehmen zu können wurden die Die Filtergewichtung und Filterkoeffizienten der Systeme eingefronen und im Testdurchlauf nicht weiter angepasst.
+Anschließend wurde die Vergleich beider Algorithmen auf dem Testdatensatz durchgeführt.
+
+
+
+
 
 \section{Fehlerfunktion(en)}
