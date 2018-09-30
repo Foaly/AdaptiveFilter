@@ -428,8 +428,15 @@ Bei einer tiefgehenderen Untersuchung der Systeme könnte mit Hilfe einer Crossv
 
 \subsection{Vergleich von KLMS und LMS}
 Es wurden ein LMS System auf Grundlage der Trainingsdaten erstellt.
-Die Filtergewichtung der Systeme wurden anschließend eingefroren und im darauffolgenden Testdurchlauf auf dem Testdatensatz nicht weiter angepasst.
-Dadurch konnte ein objektiver Vergleich zwischen den Algorithmen vorgenommen werden.
+Dabei wurden die finalen Filterkoeffizienten nach einem Durchlauf über die Trainingsdaten gespeichert.
+Anschließend wurde die Filtergewichtung des LMS Systeme genutzt um nach der Rechenart des LMS ein Signal zu erzeugen und dieses mit dem vorgegeben Trainingsdatensignal zu vergleichen.
+Der dabei entstandene Fehler wurde quadriert und mit dem quadriertem Fehler des KLMS verglichen.
+Dabei fiel überraschend auf, dass der LMS einen niedriger Fehler produziert, als der KLMS.
 
-
+\begin{figure}[H]
+  \centering
+      \includegraphics[width=0.7\textwidth]{{{figures/LMS_KLMS_Vergleich}}}
+  \caption{Vergleich der quadratischen Fehler des KLMS mit dem LMS.}
+  \label{fig:klms_lms_vergleich}
+\end{figure}
 
