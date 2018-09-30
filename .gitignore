@@ -9,6 +9,8 @@ System*.mat
 Test.mat
 Training.mat
 
+figures/*
+
 # Latex
 *.aux
 *.bbl
