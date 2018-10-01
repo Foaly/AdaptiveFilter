@@ -14,7 +14,7 @@ In der Aufgabenstellung \cite{aufgabenstellung} wurden zwei Filtersysteme vorges
 Mit Hilfe der in der Vorlesung besprochenen adaptiven Filter sollen die Koeffizienten der gegebenen Systeme identifiziert werden.
 Außerdem werden die Auswirkungen eines Systemwechsels auf die Algorithmen untersucht.
 Als Vorbereitung auf die Systemidentifikation wurden der Least-Mean-Square Algorithmus (LMS) und der Recursive-Least-Squares Algorithmus mit Vergessenfaktor (RLS) implementiert.
-Die Implementation erfolgte in Python anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S. 145).
+Die Implementierung erfolgte in Python anhand der Rechenvorschrift nach Moschytz \cite{moschytz2000book} (LMS nach S. 85 und RLS nach S. 145).
 Anschließend wird noch eine Zeitreihenschätzung mit Hilfe des Kernel Least Mean Squares (KLMS) Verfahren nach der Rechenvorschrift von Weifeng \cite{weifeng2010} (S. 34) implementiert.
 
 \section{FIR-Filter}
@@ -34,7 +34,7 @@ Dazu gehören die Anzahl der Filterkoeffizienten, die Varianz des hinzugefügten
 
 In den entstandenen Plots werden die Ergebnisse des LMS und RLS Algorithmus mit Hilfe von je zwei Plots charakterisiert. 
 Auf der linken Seite ist der quadratische Fehler (Squared-Error bzw. SE) über den zeitlichen Verlauf in Samplen dargestellt. 
-Ein gegen 0 konvergierender Verlauf des Fehlers ist wünschenswert, da dies bedeutet, dass die Differenz zwischen Ausgang des Filters und dem gewünschten Signal kleiner wird und der Algorithmus sein Ergebnis damit selbst verbessert.
+Ein gegen 0 konvergierender Verlauf des Fehlers ist wünschenswert, da dies bedeutet, dass die Differenz zwischen Ausgang des Filters und dem gewünschten Signal kleiner wird und der Algorithmus seine Filterkoeffizienten damit selbst verbessert.
 Die gestrichelte rote Linie zeigt den Durchschnittswert des Fehlers an, welche es vereinfacht den Wert abzulesen, auf den der Fehler konvergiert.
 Außerdem sei angemerkt, dass der Plot des Fehlers mit einem Moving Average von 30 Samplen geglättet wurde, um einzelne Ausreißer zu entfernen und die Lesbarkeit zu erhöhen.
 Auf der rechten Seite der Abbildung ist eine Verlaufskurve der durch den Algorithmus gelernten Filterkoeffizienten zu sehen, woraus sich das Adaptionsverhalten des Algorithmus ablesen lässt.
@@ -48,11 +48,11 @@ Ist dies nicht der Fall, so zeigt dies, dass das Eingangssignal ungeeignet für 
 Die Anzahl der Filterkoeffizienten ist einer der Parameter, der die Systemidentifikation am Stärksten beeinflusst. 
 Zu erwarten wäre, dass sich das zu identifizierende System mit weniger Koeffizienten als nötig nicht hinreichend genau abbilden lässt. 
 Nach dem Testen verschiedener Mengen an Filterkoeffizienten ($N \in \{1, 2, 5\}$) erwies sich diese Annahme auch als korrekt.
-Dabei wird deutlich, dass sowohl dem LMS als auch dem RLS Algorithmus die Approximation mit zu wenig Filterkoeffizienten gleich gut gelingt.
+Dabei wird deutlich, dass sowohl dem LMS als auch dem RLS Algorithmus die Approximation mit zu wenig Filterkoeffizienten mit etwa gleichem Erfolg gelingt.
 Vergleicht man die Fluktuation in der Fehlerkurve in Abbildungen \ref{fig:N1} und \ref{fig:N2} so wird deutlich, dass diese bei beiden Algorithmen nahezu identisch ist.
 Lediglich der Anfang des LMS Algorithmus weißt einen höheren Fehler auf, welcher auf Grund der längeren Konvergenszeit durch die Glättung der Plots nicht so stark beeinflusst wird.
 Betrachtet man jedoch den Verlauf der Koeffizient über die Laufzeit der Algorithmen, so fällt auf, dass der LMS länger benötigt bis die Koeffizienten auf einen Wert konvergieren.
-Der Koeffizientenverlauf des RLS hat nach Erreichen des Wertes auch ein deutlich stabileres und rauschärmeres Verhalten als die Koeffizienten des LMS.
+Der Koeffizientenverlauf des RLS hat nach Erreichen des Wertes auch ein leicht stabileres und rauschärmeres Verhalten als die Koeffizienten des LMS.
 Dies ist jedoch keine Eingenschaft der Algorithmen als solche, sonder wird durch die Einstellung der Parameter des Vergessensfaktors $\rho$ des RLS und der Schrittweite $\mu$ des LMS bedingt (mehr in Abschnitt \ref{sec:FIR_rho} und \ref{sec:FIR_mu}).
 Die unterschiedliche Geschwindigkeit mit der die beiden Algorithmen konvergieren ist ebenfalls darauf zurück zu führen.
 Die Legende in Abbildung \ref{fig:N5} zeigt deutlich, dass beide Algorithmen mit der korrekten Anzahl an Koeffizienten auf das identische, korrekte Ergebnis kommen (vgl. mit Abb. \ref{fig:FIR_System}).
